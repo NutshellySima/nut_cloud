@@ -2,17 +2,37 @@
 <html lang="zh-cmn-Hans">
 
 <head>
-    <meta charset="UTF-8">
-    <title>注册</title>
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/login.css" rel="stylesheet">
 </head>
 
 <body>
-    <form action="/register" method="POST">
-        <input type="text" name="user" />
-        <input type="password" name="pwd" />
-        <input type="password" name="re_pwd" />
-        <input type="submit" value="注册" />
+
+
+    <form class="form-signin" action="register" method="POST">
+        <!--img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"-->
+        <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+        <label for="inputAccount" class="sr-only">Account</label>
+        <input type="text" id="inputEmail" class="form-control" placeholder="Account" required autofocus name='user'>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required name="pwd">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required name="re_pwd">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     </form>
+    <br/>
+    <form class="form-signin" action="login" method="GET">
+            <!--img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"-->
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Go to login</button>
+    </form>
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
+
 
 </html>

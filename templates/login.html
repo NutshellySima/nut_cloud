@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html lang="zh-cmn-Hans">
+<html>
 
 <head>
-    <meta charset="UTF-8">
     <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/login.css" rel="stylesheet">
 </head>
 
 <body>
-    <form action="/login" method="POST">
-        <input type="text" name="user" />
-        <input type="password" name="pwd" />
-        <input type="submit" value="登录" />
+
+
+    <form class="form-signin" action="login" method="POST">
+        <!--img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"-->
+        <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+        <label for="inputEmail" class="sr-only">Account</label>
+        <input type="text" id="inputEmail" class="form-control" placeholder="Account" required autofocus name='user'>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required name="pwd">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
+
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>

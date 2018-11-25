@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask.sessions import SessionInterface
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from flask_bootstrap import Bootstrap
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -28,7 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 'sqlite:///'+os.path.join(basedir,'users.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+bootstrap=Bootstrap(app)
 
 @app.route('/')
 def index():
@@ -43,17 +44,19 @@ def upload_file():
         if request.method == 'POST':
             if 'file' not in request.files:
                 return redirect(request.url)
-            file = request.files['file']
-            file_path = os.path.abspath(
-                os.path.join('../upload_files/' + session['user'],
-                             secure_filename(file.filename)))
-            allowed_path = os.path.abspath(
-                os.path.join('../upload_files/' + session['user']))
-            if allowed_path == file_path[:len(allowed_path)]:
-                while os.path.exists(file_path) and os.path.isfile(file_path):
-                    sp = os.path.splitext(file_path)
-                    file_path = sp[0] + ' - 副本' + sp[1]
-                file.save(file_path)
+            file = request.files.getlist("file")
+            print(file)
+            for f in file:
+                file_path = os.path.abspath(
+                    os.path.join('../upload_files/' + session['user'],
+                                 f.filename))
+                allowed_path = os.path.abspath(
+                    os.path.join('../upload_files/' + session['user']))
+                if allowed_path == file_path[:len(allowed_path)]:
+                    while os.path.exists(file_path) and os.path.isfile(file_path):
+                        sp = os.path.splitext(file_path)
+                        file_path = sp[0] + ' - 副本' + sp[1]
+                    f.save(file_path)
     except Exception as e:
         print(e.args)
         return redirect('login')
@@ -113,20 +116,23 @@ class User(db.Model):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if 'user' in session:
-        if request.method == 'POST':
-            db.session.add(
-                User(
-                    user=str(request.form['user']),
-                    pwd=generate_password_hash(request.form['pwd'])))
-            if request.form['pwd'] == request.form['re_pwd']:
-                db.session.commit()
-                os.mkdir('../upload_files/' + request.form['user'])
-            return redirect(request.url)
-        else:
-            return render_template('register.html')
-    else:
-        return redirect('login')
+    try:
+        if 'user' in session:
+        #if True:
+            if request.method == 'POST':
+                db.session.add(
+                    User(
+                        user=str(request.form['user']),
+                        pwd=generate_password_hash(request.form['pwd'])))
+                if request.form['pwd'] == request.form['re_pwd']:
+                    db.session.commit()
+                    os.mkdir('../upload_files/' + request.form['user'])
+                return redirect(request.url)
+            else:
+                return render_template('register.html')
+    except Exception:
+        pass
+    return redirect('login')
 
 
 @app.route('/logout')
@@ -137,13 +143,16 @@ def logout():
 
 @app.route('/delete/<path:filename>')
 def delete_file(filename):
-    if 'user' not in session:
-        return redirect('login')
-    file_path = os.path.abspath((os.path.join(
-        '../upload_files/' + session['user'], filename)))
-    allowed_path = os.path.abspath(
-        os.path.join('../upload_files/' + session['user']))
-    if allowed_path == file_path[:len(allowed_path)]:
-        if os.path.exists(file_path):
-            os.remove(file_path)
-    return redirect('list_file')
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        file_path = os.path.abspath((os.path.join(
+            '../upload_files/' + session['user'], filename)))
+        allowed_path = os.path.abspath(
+            os.path.join('../upload_files/' + session['user']))
+        if allowed_path == file_path[:len(allowed_path)]:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+        return redirect('list_file')
+    except Exception:
+        return redirect(request.url)

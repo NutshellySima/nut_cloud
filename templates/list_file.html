@@ -7,11 +7,14 @@
 </head>
 
 <body>
+    <table>
     {%for i in name%}
-    <a href="/download/{{i}}" download="{{i}}">{{i}}</a>
-    <a href="/delete/{{i}}">删除</a>
-    <br />
+        <tr>
+            <td><a href="/download/{{i}}" download="{{i}}">{{i}}</a></td>
+            <td><a href="/delete/{{i}}">删除</a></td>
+        </tr>
     {%endfor%}
+    </table>
     <br /><br /><br />
     <form action="/upload_file" method="GET">
         <input type="submit" value="上传文件" />
