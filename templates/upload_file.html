@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8" />
+    <title>上传文件</title>
+</head>
+
+<body>
+    <form action='/upload_file' method=POST enctype='multipart/form-data'>
+        <input type='file' name='file' />
+        <input type='submit' value='上传' />
+    </form>
+    <br /><br /><br />
+    <form action="/list_file" method="GET">
+        <input type="submit" value="我的文件" />
+    </form>
+    <form action="/logout" method="GET">
+        <input type="submit" value="注销" />
+    </form>
+</body>
+
+</html>
