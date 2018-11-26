@@ -46,7 +46,7 @@ def upload_file():
                 if allowed_path == file_path[:len(allowed_path)]:
                     while os.path.exists(file_path) and os.path.isfile(file_path):
                         sp = os.path.splitext(file_path)
-                        file_path = sp[0] + ' - 副本' + sp[1]
+                        file_path = sp[0] + ' - copy' + sp[1]
                     f.save(file_path)
     except Exception as e:
         return redirect('login')
@@ -146,8 +146,3 @@ def delete_file(filename):
         return redirect('list_file')
     except Exception:
         return redirect(request.url)
-
-
-@app.route('/test')
-def test():
-    return render_template('test.html')
