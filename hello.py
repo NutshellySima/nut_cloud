@@ -1,5 +1,4 @@
 import os
-import re
 from flask import (
     Flask,
     render_template,
@@ -11,21 +10,28 @@ from flask import (
 from flask.sessions import SessionInterface
 from flask_sqlalchemy import SQLAlchemy
 import datetime
-import nacl.pwhash
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+SESSION_TYPE = 'redis'
 app.config.from_object(__name__)
+session_opts = {
+    'session.type': 'ext:memcached',
+    'session.url': '127.0.0.1:11211',
+    'session.data_dir': './cache',
+}
 app.secret_key = b'a5g8o1.8;5]85f5n2l5[\'65g6n-2d5d42l5d5rt'
 app.config['SQLALCHEMY_DATABASE_URI'] = \
 'sqlite:///'+os.path.join(basedir,'users.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
 @app.route('/')
 def index():
     return redirect('login')
+
 
 @app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
@@ -43,13 +49,14 @@ def upload_file():
                 allowed_path = os.path.abspath(
                     os.path.join('../upload_files/' + session['user']))
                 if allowed_path == file_path[:len(allowed_path)]:
-                    while os.path.exists(file_path) and os.path.isfile(file_path):
+                    while os.path.exists(file_path) and os.path.isfile(
+                            file_path):
                         sp = os.path.splitext(file_path)
-                        file_path = sp[0] + ' - copy' + sp[1]
+                        file_path = sp[0] + ' - 副本' + sp[1]
                     f.save(file_path)
-    except Exception as e:
+    except Exception:
         return redirect('login')
-    return render_template('upload_file.html')
+    return render_template('upload_file.html', user=session['user'])
 
 
 @app.route('/list_file')
@@ -58,7 +65,7 @@ def list_file():
         if 'user' not in session:
             return redirect('login')
         fl = os.listdir('../upload_files/' + session['user'])
-        return render_template('list_file.html', name=fl)
+        return render_template('list_file.html', name=fl, user=session['user'])
     except Exception:
         return redirect('login')
 
@@ -69,13 +76,13 @@ def download(filename):
         if 'user' not in session:
             return redirect('login')
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], filename)))
+            '../upload_files/' + session['user'], secure_filename(filename))))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
         if allowed_path == file_path[:len(allowed_path)]:
             return send_file(file_path)
-    except Exception as e:
-        print(e)
+    except Exception:
+        pass
     return redirect('login')
 
 
@@ -84,15 +91,18 @@ def login():
     if request.method == 'POST':
         try:
             user = request.form['user']
-            pwd = str(request.form['pwd']).encode('utf-8')
+            pwd = str(request.form['pwd'])
             save_users = User.query.all()
             for i in save_users:
-                if user == i.user and nacl.pwhash.verify(i.pwd, pwd):
+                if user == i.user and check_password_hash(i.pwd, pwd):
                     session['user'] = user
                     return redirect('list_file')
         except Exception:
             pass
-    return render_template('login.html')
+    if 'user' in session:
+        return render_template('login.html', user=session['user'])
+    else:
+        return render_template('login.html')
 
 
 class User(db.Model):
@@ -107,21 +117,20 @@ class User(db.Model):
 def register():
     try:
         if 'user' in session:
+            #if True:
             if request.method == 'POST':
                 db.session.add(
                     User(
                         user=str(request.form['user']),
-                        pwd=nacl.pwhash.str(request.form['pwd'].encode('utf-8'))))
-                pattern = re.compile("[A-Za-z0-9_-]+")
+                        pwd=generate_password_hash(request.form['pwd'])))
                 if request.form['pwd'] == request.form['re_pwd']:
-                    if pattern.fullmatch(str(request.form['user'])) is not None:
-                        db.session.commit()
-                        os.mkdir('../upload_files/' + request.form['user'])
+                    db.session.commit()
+                    os.mkdir('../upload_files/' + request.form['user'])
                 return redirect(request.url)
             else:
-                return render_template('register.html')
-    except Exception as e:
-        print(e)
+                return render_template('register.html', user=session['user'])
+    except Exception:
+        pass
     return redirect('login')
 
 
@@ -146,3 +155,8 @@ def delete_file(filename):
         return redirect('list_file')
     except Exception:
         return redirect(request.url)
+
+
+@app.route('/test')
+def test():
+    return render_template('test.html')
