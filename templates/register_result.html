@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <title>注册{%if success%}成功{%else%}失败{%endif%}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/lemon.ico">
+    <link href="static/login.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    {%include 'navbar.html'%}
+    <div class="container">
+        <div class="text-center">
+            {%if success%}
+            <h2>注册成功</h2>
+            {%else%}
+            <h2>注册失败</h2>
+            {%if user%}
+            <p class="lead">用户名应该符合该正则匹配:[A-Za-z0-9_-]+</p>
+            <p class="lead">用户名和密码应小于1024位,密码可以为中文.</p>
+            {%else%}
+            <p class="lead">对不起,您没有权限进行注册</p>
+            {%endif%}{%endif%}
+        </div>
+    </div>
+</body>
+
+
+</html>
