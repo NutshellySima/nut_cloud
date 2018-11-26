@@ -76,13 +76,13 @@ def download(filename):
         if 'user' not in session:
             return redirect('login')
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], secure_filename(filename))))
+            '../upload_files/' + session['user'], filename)))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
         if allowed_path == file_path[:len(allowed_path)]:
             return send_file(file_path)
-    except Exception:
-        pass
+    except Exception as e:
+        print(e)
     return redirect('login')
 
 
