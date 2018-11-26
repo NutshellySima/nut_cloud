@@ -7,8 +7,6 @@ from flask import (
     send_file,
     session,
 )
-from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask.sessions import SessionInterface
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -28,7 +26,6 @@ db = SQLAlchemy(app)
 def index():
     return redirect('login')
 
-
 @app.route('/upload_file', methods=['GET', 'POST'])
 def upload_file():
     try:
@@ -40,10 +37,10 @@ def upload_file():
             file = request.files.getlist("file")
             for f in file:
                 file_path = os.path.abspath(
-                    os.path.join('../upload_files/' + session['user'],
+                    os.path.join('../upload_files/_' + session['user'],
                                  f.filename))
                 allowed_path = os.path.abspath(
-                    os.path.join('../upload_files/' + session['user']))
+                    os.path.join('../upload_files/_' + session['user']))
                 if allowed_path == file_path[:len(allowed_path)]:
                     while os.path.exists(file_path) and os.path.isfile(file_path):
                         sp = os.path.splitext(file_path)
@@ -59,7 +56,7 @@ def list_file():
     try:
         if 'user' not in session:
             return redirect('login')
-        fl = os.listdir('../upload_files/' + session['user'])
+        fl = os.listdir('../upload_files/_' + session['user'])
         return render_template('list_file.html', name=fl)
     except Exception:
         return redirect('login')
@@ -71,9 +68,9 @@ def download(filename):
         if 'user' not in session:
             return redirect('login')
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], filename)))
+            '../upload_files/_' + session['user'], filename)))
         allowed_path = os.path.abspath(
-            os.path.join('../upload_files/' + session['user']))
+            os.path.join('../upload_files/_' + session['user']))
         if allowed_path == file_path[:len(allowed_path)]:
             return send_file(file_path)
     except Exception as e:
@@ -116,7 +113,7 @@ def register():
                         pwd=nacl.pwhash.str(request.form['pwd'].encode('utf-8'))))
                 if request.form['pwd'] == request.form['re_pwd']:
                     db.session.commit()
-                    os.mkdir('../upload_files/' + request.form['user'])
+                    os.mkdir('../upload_files/_' + request.form['user'])
                 return redirect(request.url)
             else:
                 return render_template('register.html')
@@ -137,9 +134,9 @@ def delete_file(filename):
         if 'user' not in session:
             return redirect('login')
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], filename)))
+            '../upload_files/_' + session['user'], filename)))
         allowed_path = os.path.abspath(
-            os.path.join('../upload_files/' + session['user']))
+            os.path.join('../upload_files/_' + session['user']))
         if allowed_path == file_path[:len(allowed_path)]:
             if os.path.exists(file_path):
                 os.remove(file_path)
