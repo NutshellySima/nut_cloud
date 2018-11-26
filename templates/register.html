@@ -4,14 +4,13 @@
 <head>
     <title>注册</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/login.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.z01.com/v4/dist/css/bootstrap.min.css">
 </head>
 
 <body>
 
-
+    {%include 'navbar.html'%}
     <form class="form-signin" action="register" method="POST">
         <!--img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"-->
         <h1 class="h3 mb-3 font-weight-normal">Register</h1>
@@ -22,7 +21,7 @@
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" class="form-control" placeholder="Password" required name="re_pwd">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        <a class ='form-control btn btn-lg btn-primary btn-block' href="login">Go to login</a>
+        <a class='form-control btn btn-lg btn-primary btn-block' href="login">Go to login</a>
     </form>
 </body>
 

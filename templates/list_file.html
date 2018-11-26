@@ -4,13 +4,13 @@
 <head>
     <meta charset="utf-8" />
     <title>我的文件</title>
-    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/login.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://code.z01.com/v4/dist/css/bootstrap.min.css">
 
 </head>
 
 <body>
+    {%include 'navbar.html'%}
     <table class="form-signin">
         {%for i in name%}
         <tr>
@@ -19,19 +19,8 @@
         </tr>
         {%endfor%}
     </table>
-    <nav><div class="collapse navbar-collapse" id="navbarCollapse">
-
-        <form class="form-signin" action="/upload_file" method="GET">
-            <button class='btn btn-lg btn-primary btn-block' type="submit">上传文件</button>
-        </form>
-        <form class="form-signin" action="/logout" method="GET">
-            <button class='btn btn-lg btn-primary btn-block' type="submit">注销</button>
-        </form>
-        <form class="form-signin" action="/register" method="GET">
-            <button class='btn btn-lg btn-primary btn-block' type="submit">注册</button>
-        </form>
-    </div></nav>
     
+
 
 </body>
 
