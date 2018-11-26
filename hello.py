@@ -29,6 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
 @app.route('/')
 def index():
     return redirect('login')
@@ -50,13 +51,14 @@ def upload_file():
                 allowed_path = os.path.abspath(
                     os.path.join('../upload_files/' + session['user']))
                 if allowed_path == file_path[:len(allowed_path)]:
-                    while os.path.exists(file_path) and os.path.isfile(file_path):
+                    while os.path.exists(file_path) and os.path.isfile(
+                            file_path):
                         sp = os.path.splitext(file_path)
                         file_path = sp[0] + ' - 副本' + sp[1]
                     f.save(file_path)
-    except Exception as e:
+    except Exception:
         return redirect('login')
-    return render_template('upload_file.html')
+    return render_template('upload_file.html', user=session['user'])
 
 
 @app.route('/list_file')
@@ -65,7 +67,7 @@ def list_file():
         if 'user' not in session:
             return redirect('login')
         fl = os.listdir('../upload_files/' + session['user'])
-        return render_template('list_file.html', name=fl)
+        return render_template('list_file.html', name=fl, user=session['user'])
     except Exception:
         return redirect('login')
 
@@ -99,7 +101,10 @@ def login():
                     return redirect('list_file')
         except Exception:
             pass
-    return render_template('login.html')
+    if 'user' in session:
+        return render_template('login.html', user=session['user'])
+    else:
+        return render_template('login.html')
 
 
 class User(db.Model):
@@ -114,7 +119,7 @@ class User(db.Model):
 def register():
     try:
         if 'user' in session:
-        #if True:
+            #if True:
             if request.method == 'POST':
                 db.session.add(
                     User(
@@ -125,7 +130,7 @@ def register():
                     os.mkdir('../upload_files/' + request.form['user'])
                 return redirect(request.url)
             else:
-                return render_template('register.html')
+                return render_template('register.html', user=session['user'])
     except Exception:
         pass
     return redirect('login')
