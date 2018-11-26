@@ -6,17 +6,19 @@
     <title>我的文件</title>
     <link rel="icon" href="static/lemon.ico">
     <link href="static/login.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://code.z01.com/v4/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
 
 </head>
 
 <body>
     {%include 'navbar.html'%}
     <table class="form-signin">
-        {%for i in name%}
+        {%for i in files%}
         <tr>
-            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/download/{{i}}" download="{{i}}">{{i}}</a></td>
-            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/delete/{{i}}">删除</a></td>
+            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/download/{{i.name}}" download="{{i.name}}">{{i.name}}</a></td>
+            <td>{{i.size}}</td>
+            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/delete/{{i.name}}">删除</a></td>
         </tr>
         {%endfor%}
     </table>
