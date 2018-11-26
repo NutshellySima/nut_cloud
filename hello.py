@@ -111,7 +111,8 @@ def register():
                     User(
                         user=str(request.form['user']),
                         pwd=nacl.pwhash.str(request.form['pwd'].encode('utf-8'))))
-                if request.form['pwd'] == request.form['re_pwd']:
+                pattern = re.compile("[A-Za-z0-9_-]+")
+                if request.form['pwd'] == request.form['re_pwd'] and pattern.fullmatch(str(request.form['user'])):
                     db.session.commit()
                     os.mkdir('../upload_files/' + request.form['user'])
                 return redirect(request.url)
