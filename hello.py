@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask.sessions import SessionInterface
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+import nacl.pwhash
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -85,10 +86,10 @@ def login():
     if request.method == 'POST':
         try:
             user = request.form['user']
-            pwd = str(request.form['pwd'])
+            pwd = str(request.form['pwd']).encode('utf-8')
             save_users = User.query.all()
             for i in save_users:
-                if user == i.user and check_password_hash(i.pwd, pwd):
+                if user == i.user and nacl.pwhash.verify(i.pwd, pwd):
                     session['user'] = user
                     return redirect('list_file')
         except Exception:
@@ -108,12 +109,11 @@ class User(db.Model):
 def register():
     try:
         if 'user' in session:
-        #if True:
             if request.method == 'POST':
                 db.session.add(
                     User(
                         user=str(request.form['user']),
-                        pwd=generate_password_hash(request.form['pwd'])))
+                        pwd=nacl.pwhash.str(request.form['pwd'].encode('utf-8'))))
                 if request.form['pwd'] == request.form['re_pwd']:
                     db.session.commit()
                     os.mkdir('../upload_files/' + request.form['user'])
