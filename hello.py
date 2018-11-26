@@ -25,6 +25,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
+@app.route('/')
+def door():
+    return redirect('/static/index.html')
+
 @app.route('/pan')
 def index():
     if 'user' in session:
