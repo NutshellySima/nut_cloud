@@ -12,7 +12,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask.sessions import SessionInterface
 from flask_sqlalchemy import SQLAlchemy
 import datetime
-from flask_bootstrap import Bootstrap
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -29,7 +28,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 'sqlite:///'+os.path.join(basedir,'users.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-bootstrap=Bootstrap(app)
 
 @app.route('/')
 def index():
@@ -45,7 +43,6 @@ def upload_file():
             if 'file' not in request.files:
                 return redirect(request.url)
             file = request.files.getlist("file")
-            print(file)
             for f in file:
                 file_path = os.path.abspath(
                     os.path.join('../upload_files/' + session['user'],
@@ -58,7 +55,6 @@ def upload_file():
                         file_path = sp[0] + ' - 副本' + sp[1]
                     f.save(file_path)
     except Exception as e:
-        print(e.args)
         return redirect('login')
     return render_template('upload_file.html')
 
@@ -156,3 +152,8 @@ def delete_file(filename):
         return redirect('list_file')
     except Exception:
         return redirect(request.url)
+
+
+@app.route('/test')
+def test():
+    return render_template('test.html')

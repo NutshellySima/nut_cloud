@@ -4,27 +4,35 @@
 <head>
     <meta charset="utf-8" />
     <title>我的文件</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/login.css" rel="stylesheet">
+
+
 </head>
 
 <body>
-    <table>
-    {%for i in name%}
+    <table class="form-signin">
+        {%for i in name%}
         <tr>
-            <td><a href="/download/{{i}}" download="{{i}}">{{i}}</a></td>
-            <td><a href="/delete/{{i}}">删除</a></td>
+            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/download/{{i}}" download="{{i}}">{{i}}</a></td>
+            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/delete/{{i}}">删除</a></td>
         </tr>
-    {%endfor%}
+        {%endfor%}
     </table>
-    <br /><br /><br />
-    <form action="/upload_file" method="GET">
-        <input type="submit" value="上传文件" />
-    </form>
-    <form action="/logout" method="GET">
-        <input type="submit" value="注销" />
-    </form>
-    <form action="/register" method="GET">
-        <input type="submit" value="注册" />
-    </form>
+    <nav><div class="collapse navbar-collapse" id="navbarCollapse">
+
+        <form class="form-signin" action="/upload_file" method="GET">
+            <button class='btn btn-lg btn-primary btn-block' type="submit">上传文件</button>
+        </form>
+        <form class="form-signin" action="/logout" method="GET">
+            <button class='btn btn-lg btn-primary btn-block' type="submit">注销</button>
+        </form>
+        <form class="form-signin" action="/register" method="GET">
+            <button class='btn btn-lg btn-primary btn-block' type="submit">注册</button>
+        </form>
+    </div></nav>
+    
+
 </body>
 
 </html>
