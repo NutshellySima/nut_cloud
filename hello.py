@@ -1,4 +1,5 @@
 import os
+import re
 from flask import (
     Flask,
     render_template,
@@ -112,14 +113,15 @@ def register():
                         user=str(request.form['user']),
                         pwd=nacl.pwhash.str(request.form['pwd'].encode('utf-8'))))
                 pattern = re.compile("[A-Za-z0-9_-]+")
-                if request.form['pwd'] == request.form['re_pwd'] and pattern.fullmatch(str(request.form['user'])):
-                    db.session.commit()
-                    os.mkdir('../upload_files/' + request.form['user'])
+                if request.form['pwd'] == request.form['re_pwd']:
+                    if pattern.fullmatch(str(request.form['user'])) is not None:
+                        db.session.commit()
+                        os.mkdir('../upload_files/' + request.form['user'])
                 return redirect(request.url)
             else:
                 return render_template('register.html')
-    except Exception:
-        pass
+    except Exception as e:
+        print(e)
     return redirect('login')
 
 
