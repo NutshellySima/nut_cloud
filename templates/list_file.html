@@ -2,7 +2,7 @@
 <html lang="zh-cmn-Hans">
 
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>我的文件</title>
     {%include 'head.html'%}
@@ -13,13 +13,14 @@
     <table class="form-signin">
         {%for i in files%}
         <tr>
-            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/download/{{i.name}}" download="{{i.name}}">{{i.name}}</a></td>
+            <td class="smtext"><a class='smtext form-control btn btn-lg btn-primary btn-block' href="/download/{{i.name}}"
+                    download="{{i.name}}">{{i.name}}</a></td>
             <td>{{i.size}}</td>
             <td><a class='form-control btn btn-lg btn-primary btn-block' href="/delete/{{i.name}}">删除</a></td>
         </tr>
         {%endfor%}
     </table>
-    
+
 
 
 </body>
