@@ -56,9 +56,9 @@ def upload_file():
                         sp = os.path.splitext(file_path)
                         file_path = sp[0] + ' - copy' + sp[1]
                     f.save(file_path)
-    except Exception as e:
+    except Exception:
         return redirect('login')
-    return render_template('upload_file.html')
+    return render_template('upload_file.html', user=session['user'])
 
 
 @app.route('/list_file')
