@@ -74,8 +74,14 @@ def list_file():
                 os.path.abspath(
                     os.path.join('../upload_files/' + session['user'],
                                  str(fl[i]))))
-            file_name = fl[i]
-            fl[i] = {'size': str(size(file_size)), 'name': str(file_name)}
+            file_name = str(fl[i])
+            sp = os.path.splitext(os.path.join('../upload_files/' + session['user'],
+                                 str(fl[i])))
+            if len(sp[1]):
+                file_name = file_name[:-len(sp[1])]
+                fl[i] = {'size': str(size(file_size)), 'name': file_name, 'ext':str(sp[1][1:]),'filename':file_name+"."+str(sp[1][1:])}
+            else:
+                fl[i] = {'size': str(size(file_size)), 'name': file_name,'filename':file_name}
         return render_template(
             'list_file.html', files=fl, user=session['user'])
     except Exception as e:
@@ -117,6 +123,8 @@ def login():
             f.write('User ' + str(user) + ' login at ' +
                     str(datetime.datetime.now()) + ' failed.\n')
             pass
+    if 'user' in session:
+        return redirect('list_file')
     return render_template('login.html')
 
 

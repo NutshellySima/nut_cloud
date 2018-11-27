@@ -10,17 +10,22 @@
 
 <body>
     {%include 'navbar.html'%}
-    <table class="form-signin">
+    <div class="have-margin card-columns">
         {%for i in files%}
-        <tr>
-            <td class="smtext"><a class='smtext form-control btn btn-lg btn-primary btn-block' href="/download/{{i.name}}"
-                    download="{{i.name}}">{{i.name}}</a></td>
-            <td>{{i.size}}</td>
-            <td><a class='form-control btn btn-lg btn-primary btn-block' href="/delete/{{i.name}}">删除</a></td>
-        </tr>
+        <div class="card border-dark">
+            {%if i.ext%}
+            <div class="card-header">{{i.ext}}</div>
+            {%endif%}
+            <div class="card-body">
+                <h5 class="card-title"><a class="text-dark" href="/download/{{i.filename}}" download="{{i.filename}}">{{i.name}}</a></h5>
+                <p class="card-text">{{i.size}}</p>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-danger" href="/delete/{{i.filename}}">删除</a>
+            </div>
+        </div>
         {%endfor%}
-    </table>
-
+    </div>
 
 
 </body>
