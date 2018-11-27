@@ -26,11 +26,13 @@ db = SQLAlchemy(app)
 
 
 @app.route('/')
-def door():
+def index():
     return redirect('/static/index.html')
 
+
 @app.route('/pan')
-def index():
+@app.route('/nut_cloud')
+def nut_cloud():
     if 'user' in session:
         return redirect('list_file')
     return redirect('login')
