@@ -12,12 +12,10 @@
     <form class="form-signin" action="register" method="POST">
         <!--img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"-->
         <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-        <label for="inputAccount" class="sr-only">Account</label>
         <input type="text" class="form-control" placeholder="Account" required autofocus name='user'>
-        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="text" class="form-control" placeholder="邀请码" required name="invite_code">
         <input type="password" class="form-control" placeholder="Password" required name="pwd">
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" class="form-control" placeholder="Password" required name="re_pwd">
+        <input type="password" class="form-control" placeholder="Repeat Password" required name="re_pwd">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
         <a class='form-control btn btn-lg btn-primary btn-block' href="login">Go to login</a>
     </form>
