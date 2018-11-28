@@ -1,4 +1,5 @@
 #!/bin/bash
-sleep 1s
+cd /home/sima/myproject
 git pull
+sleep 1s
 /home/sima/myproject/restart
