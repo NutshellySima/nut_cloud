@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 from flask import (
     Flask,
     render_template,
@@ -8,7 +9,6 @@ from flask import (
     send_file,
     session,
 )
-from flask.sessions import SessionInterface
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import nacl.pwhash
@@ -62,8 +62,9 @@ def upload_file():
                 if allowed_path == file_path[:len(allowed_path)]:
                     while os.path.exists(file_path) and os.path.isfile(
                             file_path):
-                        sp = os.path.splitext(file_path)
-                        file_path = sp[0] + ' - copy' + sp[1]
+                        split_file_name = os.path.splitext(file_path)
+                        file_path = split_file_name[
+                            0] + ' - copy' + split_file_name[1]
                     f.save(file_path)
     except Exception:
         return redirect('login')
@@ -75,32 +76,51 @@ def list_file():
     try:
         if 'user' not in session:
             return redirect('login')
-        fl = os.listdir('../upload_files/' + session['user'])
-        fl = sorted(fl)
-        for i in range(len(fl)):
+        dir_path = ''
+        if 'dir_path' in request.values:
+            dir_path = request.values['dir_path']
+        cur_dir_abs_path = os.path.abspath(
+            os.path.join('../upload_files/' + session['user'], dir_path))
+        allowed_path = os.path.abspath(
+            os.path.join('../upload_files/' + session['user']))
+        if allowed_path != cur_dir_abs_path[:len(allowed_path)]:
+            return redirect('list_file')
+        file_list = os.listdir(cur_dir_abs_path)
+        file_list = sorted(file_list)
+        for i in range(len(file_list)):
             file_size = os.path.getsize(
                 os.path.abspath(
-                    os.path.join('../upload_files/' + session['user'],
-                                 str(fl[i]))))
-            file_name = str(fl[i])
-            sp = os.path.splitext(
-                os.path.join('../upload_files/' + session['user'], str(fl[i])))
-            if len(sp[1]):
-                file_name = file_name[:-len(sp[1])]
-                fl[i] = {
+                    os.path.join(cur_dir_abs_path, str(file_list[i]))))
+            file_name = str(file_list[i])
+            split_file_name = os.path.splitext(
+                os.path.join(cur_dir_abs_path, str(file_list[i])))
+            is_dir = os.path.isdir(
+                os.path.join(cur_dir_abs_path, str(file_list[i])))
+            if len(split_file_name[1]):
+                file_name = file_name[:-len(split_file_name[1])]
+                file_list[i] = {
                     'size': str(size(file_size)),
                     'name': file_name,
-                    'ext': str(sp[1][1:]),
-                    'filename': file_name + "." + str(sp[1][1:])
+                    'ext': str(split_file_name[1][1:]),
+                    'filename': file_name + "." + str(split_file_name[1][1:])
                 }
             else:
-                fl[i] = {
+                file_list[i] = {
                     'size': str(size(file_size)),
                     'name': file_name,
                     'filename': file_name
                 }
+            if is_dir:
+                file_list[i]['is_dir'] = True
+        if dir_path:
+            dir_path = dir_path + '/'
         return render_template(
-            'list_file.html', files=fl, user=session['user'])
+            'list_file.html',
+            files={
+                'files': file_list,
+                'dir_path': dir_path
+            },
+            user=session['user'])
     except Exception as e:
         print(e.args)
     return redirect('login')
@@ -214,18 +234,23 @@ def logout():
     return redirect('login')
 
 
-@app.route('/delete/<path:filename>')
-def delete_file(filename):
+@app.route('/delete')
+def delete_file():
     try:
         if 'user' not in session:
             return redirect('login')
+        filename = request.values['filename']
+        dir_path = request.values['dir_path']
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], filename)))
+            '../upload_files/' + session['user'], dir_path + filename)))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
         if allowed_path == file_path[:len(allowed_path)]:
             if os.path.exists(file_path):
-                os.remove(file_path)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                if os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
         return redirect('list_file')
     except Exception:
         return redirect('login')

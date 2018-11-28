@@ -11,17 +11,26 @@
 <body>
     {%include 'navbar.html'%}
     <div class="have-margin card-columns">
-        {%for i in files%}
+        {%for i in files.files%}
         <div class="card border-dark">
             {%if i.ext%}
             <div class="card-header">{{i.ext}}</div>
             {%endif%}
+            {%if i.is_dir%}
+            <div class="card-header dir-color">文件夹</div>
+            {%endif%}
             <div class="card-body">
-                <h5 class="card-title"><a class="text-dark" href="/download/{{i.filename}}" download="{{i.filename}}">{{i.name}}</a></h5>
+                {%if i.is_dir%}
+                <h5 class="card-title"><a class="text-dark" 
+                    href="/list_file?dir_path={{files.dir_path}}{{i.filename}}">{{i.name}}</a></h5>
+                {%else%}
+                <h5 class="card-title"><a class="text-dark" href="/download/{{files.dir_path}}{{i.filename}}" 
+                    download="{{i.filename}}">{{i.name}}</a></h5>
                 <p class="card-text">{{i.size}}</p>
+                {%endif%}
             </div>
             <div class="card-footer">
-                <a class="btn btn-danger" href="/delete/{{i.filename}}">删除</a>
+                <a class="btn btn-danger" href="/delete?filename={{i.filename}}&dir_path={{files.dir_path}}">删除</a>
             </div>
         </div>
         {%endfor%}
