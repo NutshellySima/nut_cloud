@@ -249,10 +249,12 @@ def invite():
 def restart():
     try:
         if request.headers['X-GitHub-Event'] == 'ping'
-            return
+            return ('', 204)
         # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
         # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
         if request.headers['X-GitHub-Event'] == 'push' and "/dev" in request.form['ref']:
             os.spawnl(os.P_NOWAIT, './start.sh','./start.sh')
+            return ('', 204)
     except Exception as e:
         print(e)
+        return ('', 204)
