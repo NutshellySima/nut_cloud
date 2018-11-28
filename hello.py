@@ -297,3 +297,17 @@ def create_dir():
     print(dir_path)
     os.mkdir('../upload_files/' + session['user'] + '/' + dir_path + dir_name)
     return redirect('list_file')  #todo p
+
+@app.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
+def restart():
+    try:
+        if request.headers['X-GitHub-Event'] == 'ping':
+            return ('', 204)
+        # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
+        # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
+        if request.headers['X-GitHub-Event'] == 'push':
+            os.spawnl(os.P_NOWAIT, '/home/sima/myproject/start.sh','/home/sima/myproject/start.sh')
+            return ('', 204)
+    except Exception as e:
+        print(e)
+        return ('', 500)
