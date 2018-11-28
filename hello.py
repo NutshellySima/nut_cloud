@@ -50,13 +50,17 @@ def upload_file():
         if 'user' not in session:
             return redirect('login')
         if request.method == 'POST':
+            dir_path = ''
+            if 'dir_path' in request.values:
+                dir_path = request.values['dir_path']
             if 'file' not in request.files:
                 return redirect(request.url)
             file = request.files.getlist("file")
             for f in file:
                 file_path = os.path.abspath(
                     os.path.join('../upload_files/' + session['user'],
-                                 f.filename))
+                                 os.path.join(dir_path, f.filename)))
+                print(file_path)
                 allowed_path = os.path.abspath(
                     os.path.join('../upload_files/' + session['user']))
                 if allowed_path == file_path[:len(allowed_path)]:
@@ -68,7 +72,11 @@ def upload_file():
                     f.save(file_path)
     except Exception:
         return redirect('login')
-    return render_template('upload_file.html', user=session['user'])
+    dir_path = ''
+    if 'dir_path' in request.values:
+        dir_path = request.values['dir_path']
+    return render_template(
+        'upload_file.html', user=session['user'], dir_path=dir_path)
 
 
 @app.route('/list_file')
@@ -241,17 +249,22 @@ def delete_file():
             return redirect('login')
         filename = request.values['filename']
         dir_path = request.values['dir_path']
+        print(dir_path)
+        print(filename)
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], dir_path + filename)))
+            '../upload_files/' + session['user'],
+            os.path.join(dir_path, filename))))
         allowed_path = os.path.abspath(
-            os.path.join('../upload_files/' + session['user']))
+            os.path.join('../upload_files/', session['user']))
         if allowed_path == file_path[:len(allowed_path)]:
             if os.path.exists(file_path):
                 if os.path.isfile(file_path):
                     os.remove(file_path)
                 if os.path.isdir(file_path):
                     shutil.rmtree(file_path)
-        return redirect('list_file')
+        if dir_path[len(dir_path) - 1] == '/':
+            dir_path = dir_path[:-1]
+        return redirect('list_file?dir_path=' + dir_path)
     except Exception:
         return redirect('login')
 
@@ -269,3 +282,18 @@ def invite():
     db.session.commit()
     return render_template(
         'invite.html', invite_code=ivc, user=session['user'])
+
+
+@app.route('/create_dir', methods=['GET', 'POST'])
+def create_dir():
+    if 'user' not in session:
+        return redirect('login')
+    if request.method == 'GET':
+        dir_path = request.values['dir_path']
+        return render_template(
+            'create_dir.html', user=session['user'], dir_path=dir_path)
+    dir_name = request.form['dir_name']
+    dir_path = request.form['dir_path']
+    print(dir_path)
+    os.mkdir('../upload_files/' + session['user'] + '/' + dir_path + dir_name)
+    return redirect('list_file')  #todo p

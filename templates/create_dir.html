@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <title>创建文件夹</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {%include 'head.html'%}
+</head>
+
+<body>
+    {%include 'navbar.html'%}
+    <form class="form-signin" action="create_dir" method="POST">
+        <h1 class="h3 mb-3 font-weight-normal">输入文件夹名字</h1>
+        <input type="hidden" name="dir_path" value="{{dir_path}}"/>
+        <input type="text" class="form-control" name='dir_name' placeholder="文件夹名字">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">创建</button>
+    </form>
+
+    {%include 'foot.html'%}
+
+
+</body>
+
+</html>

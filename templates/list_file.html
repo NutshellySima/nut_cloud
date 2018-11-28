@@ -11,6 +11,7 @@
 <body>
     {%include 'navbar.html'%}
     <div class="have-margin card-columns">
+        {%include 'front_of_list_file.html'%}
         {%for i in files.files%}
         <div class="card border-dark">
             {%if i.ext%}
