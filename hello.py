@@ -257,4 +257,4 @@ def restart():
             return ('', 204)
     except Exception as e:
         print(e)
-        return ('', 204)
+        return ('', 500)
