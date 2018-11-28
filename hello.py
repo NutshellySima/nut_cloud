@@ -76,6 +76,7 @@ def list_file():
         if 'user' not in session:
             return redirect('login')
         fl = os.listdir('../upload_files/' + session['user'])
+        fl = sorted(fl)
         for i in range(len(fl)):
             file_size = os.path.getsize(
                 os.path.abspath(
