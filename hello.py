@@ -248,6 +248,8 @@ def invite():
 @app.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
 def restart():
     try:
+        if request.headers['X-GitHub-Event'] == 'ping'
+            return
         # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
         # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
         if request.headers['X-GitHub-Event'] == 'push' and "/dev" in request.form['ref']:
