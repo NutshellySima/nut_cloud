@@ -253,7 +253,7 @@ def restart():
         # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
         # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
         if request.headers['X-GitHub-Event'] == 'push' and "/dev" in request.form['ref']:
-            os.spawnl(os.P_NOWAIT, './start.sh','./start.sh')
+            os.spawnl(os.P_NOWAIT, '/home/sima/myproject/start.sh','/home/sima/myproject/start.sh')
             return ('', 204)
     except Exception as e:
         print(e)
