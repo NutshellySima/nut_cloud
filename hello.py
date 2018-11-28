@@ -244,3 +244,13 @@ def invite():
     db.session.commit()
     return render_template(
         'invite.html', invite_code=ivc, user=session['user'])
+
+@app.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
+def restart():
+    try:
+        # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
+        # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
+        if request.headers['X-GitHub-Event'] == 'push' and "/dev" in request.form['ref']:
+            os.spawnl(os.P_NOWAIT, './start.sh','./start.sh')
+    except Exception as e:
+        print(e)
