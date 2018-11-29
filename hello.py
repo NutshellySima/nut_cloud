@@ -60,7 +60,6 @@ def upload_file():
                 file_path = os.path.abspath(
                     os.path.join('../upload_files/',
                                  os.path.join(dir_path, f.filename)))
-                print(file_path)
                 anyone_path = os.path.abspath(
                     os.path.join('../upload_files/anyone'))
                 allowed_path = os.path.abspath(
@@ -93,10 +92,8 @@ def list_file():
         if dir_path != '':
             if dir_path[len(dir_path) - 1] == '/':
                 dir_path = dir_path[:-1]
-                print('sub/')
         else:
             dir_path = session['user']
-        print(dir_path)
         cur_dir_abs_path = os.path.abspath(
             os.path.join('../upload_files/', dir_path))
         allowed_path = os.path.abspath(
@@ -270,20 +267,23 @@ def delete_file():
             return redirect('login')
         filename = request.values['filename']
         dir_path = request.values['dir_path']
-        print(dir_path)
-        print(filename)
         file_path = os.path.abspath((os.path.join(
             '../upload_files/', os.path.join(dir_path, filename))))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/', session['user']))
         anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        print(file_path)
         if allowed_path == file_path[:len(allowed_path)] or\
                     anyone_path == file_path[:len(anyone_path)]:
             if os.path.exists(file_path):
                 if os.path.isfile(file_path):
                     os.remove(file_path)
                 if os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
+                    print('rmdir')
+                    if file_path != allowed_path and file_path != anyone_path:
+                        shutil.rmtree(file_path)
+                    else:
+                        print('ban')
         if dir_path[len(dir_path) - 1] == '/':
             dir_path = dir_path[:-1]
         return redirect('list_file?dir_path=' + dir_path)
@@ -320,7 +320,6 @@ def create_dir():
         os.path.join('../upload_files/', session['user']))
     dir_abs_path = os.path.abspath(
         os.path.join('../upload_files/', os.path.join(dir_path, dir_name)))
-    print(dir_abs_path)
     anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
     if dir_abs_path[:len(allowed_path)] == allowed_path or\
                     anyone_path == dir_abs_path[:len(anyone_path)]:
