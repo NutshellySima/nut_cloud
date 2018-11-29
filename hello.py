@@ -261,7 +261,7 @@ def delete_file():
                 if os.path.isfile(file_path):
                     os.remove(file_path)
                 if os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
+                    os.rmdir(file_path)
         if dir_path[len(dir_path) - 1] == '/':
             dir_path = dir_path[:-1]
         return redirect('list_file?dir_path=' + dir_path)
@@ -294,9 +294,15 @@ def create_dir():
             'create_dir.html', user=session['user'], dir_path=dir_path)
     dir_name = request.form['dir_name']
     dir_path = request.form['dir_path']
-    print(dir_path)
-    os.mkdir('../upload_files/' + session['user'] + '/' + dir_path + dir_name)
+    allowed_path = os.path.abspath(
+        os.path.join('../upload_files/', session['user']))
+    dir_abs_path = os.path.abspath('../upload_files/' + session['user'] + '/' +
+                                   dir_path + dir_name)
+    if dir_abs_path[:len(allowed_path)] == allowed_path:
+        os.mkdir('../upload_files/' + session['user'] + '/' + dir_path +
+                 dir_name)
     return redirect('list_file')  #todo p
+
 
 @app.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
 def restart():
@@ -306,7 +312,8 @@ def restart():
         # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
         # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
         if request.headers['X-GitHub-Event'] == 'push':
-            os.spawnl(os.P_NOWAIT, '/home/sima/myproject/start.sh','/home/sima/myproject/start.sh')
+            os.spawnl(os.P_NOWAIT, '/home/sima/myproject/start.sh',
+                      '/home/sima/myproject/start.sh')
             return ('', 204)
     except Exception as e:
         print(e)
