@@ -299,8 +299,11 @@ def create_dir():
     dir_abs_path = os.path.abspath('../upload_files/' + session['user'] + '/' +
                                    dir_path + dir_name)
     if dir_abs_path[:len(allowed_path)] == allowed_path:
-        os.mkdir('../upload_files/' + session['user'] + '/' + dir_path +
+        try:
+            os.mkdir('../upload_files/' + session['user'] + '/' + dir_path +
                  dir_name)
+        except Exception as e:
+            pass
     return redirect('list_file')  #todo p
 
 
