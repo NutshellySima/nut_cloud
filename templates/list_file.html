@@ -22,16 +22,39 @@
             {%endif%}
             <div class="card-body">
                 {%if i.is_dir%}
-                <h5 class="card-title"><a class="text-dark" 
-                    href="/list_file?dir_path={{files.dir_path}}{{i.filename}}">{{i.name}}</a></h5>
+                <h5 class="card-title"><a class="text-dark" href="/list_file?dir_path={{files.dir_path}}{{i.filename}}">{{i.name}}</a></h5>
                 {%else%}
-                <h5 class="card-title"><a class="text-dark" href="/download/{{files.dir_path}}{{i.filename}}" 
-                    download="{{i.filename}}">{{i.name}}</a></h5>
+                <h5 class="card-title"><a class="text-dark" href="/download/{{files.dir_path}}{{i.filename}}" download="{{i.filename}}">{{i.name}}</a></h5>
                 <p class="card-text">{{i.size}}</p>
                 {%endif%}
             </div>
             <div class="card-footer">
-                <a class="btn btn-danger" href="/delete?filename={{i.filename}}&dir_path={{files.dir_path}}">删除</a>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
+                    删除
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="I{{loop.index}}ModalCenter" tabindex="-1" role="dialog" aria-labelledby="I{{loop.index}}ModalCenterTitle"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="I{{loop.index}}ModalCenterTitle">删除确认</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                你是否确认要删除{{i.filename}}？
+                            </div>
+                            <div class="modal-footer">
+                                    <a class="btn btn-danger" href="/delete?filename={{i.filename}}&dir_path={{files.dir_path}}">确认删除</a>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         {%endfor%}
