@@ -58,7 +58,7 @@ def upload_file():
             file = request.files.getlist("file")
             for f in file:
                 file_path = os.path.abspath(
-                    os.path.join('../upload_files/' + session['user'],
+                    os.path.join('../upload_files/',
                                  os.path.join(dir_path, f.filename)))
                 print(file_path)
                 anyone_path = os.path.abspath(
@@ -90,8 +90,10 @@ def list_file():
         dir_path = ''
         if 'dir_path' in request.values:
             dir_path = request.values['dir_path']
+        else:
+            dir_path = session['user']
         cur_dir_abs_path = os.path.abspath(
-            os.path.join('../upload_files/' + session['user'], dir_path))
+            os.path.join('../upload_files/', dir_path))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
         anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
@@ -125,8 +127,7 @@ def list_file():
                 }
             if is_dir:
                 file_list[i]['is_dir'] = True
-        if dir_path:
-            dir_path = dir_path + '/'
+        dir_path = dir_path + '/'
         return render_template(
             'list_file.html',
             files={
@@ -259,8 +260,7 @@ def delete_file():
         print(dir_path)
         print(filename)
         file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'],
-            os.path.join(dir_path, filename))))
+            '../upload_files/', os.path.join(dir_path, filename))))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/', session['user']))
         anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
@@ -305,14 +305,14 @@ def create_dir():
     dir_path = request.form['dir_path']
     allowed_path = os.path.abspath(
         os.path.join('../upload_files/', session['user']))
-    dir_abs_path = os.path.abspath('../upload_files/' + session['user'] + '/' +
-                                   dir_path + dir_name)
+    dir_abs_path = os.path.abspath(
+        os.path.join('../upload_files/', os.path.join(dir_path, dir_name)))
+    print(dir_abs_path)
     anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
     if dir_abs_path[:len(allowed_path)] == allowed_path or\
                     anyone_path == dir_abs_path[:len(anyone_path)]:
         try:
-            os.mkdir('../upload_files/' + session['user'] + '/' + dir_path +
-                     dir_name)
+            os.mkdir(dir_abs_path)
         except Exception as e:
             pass
     return redirect('list_file')  #todo p
