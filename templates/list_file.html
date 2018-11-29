@@ -22,9 +22,9 @@
             {%endif%}
             <div class="card-body">
                 {%if i.is_dir%}
-                <h5 class="card-title"><a class="text-dark" href="/list_file?dir_path={{files.dir_path}}{{i.filename}}">{{i.name}}</a></h5>
+                <h5 class="card-title"><a class="text-dark" href="/list_file?dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">{{i.name}}</a></h5>
                 {%else%}
-                <h5 class="card-title"><a class="text-dark" href="/download/{{files.dir_path}}{{i.filename}}" download="{{i.filename}}">{{i.name}}</a></h5>
+                <h5 class="card-title"><a class="text-dark" href="/download/{{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}" download="{{i.filename}}">{{i.name}}</a></h5>
                 <p class="card-text">{{i.size}}</p>
                 {%endif%}
             </div>
@@ -46,7 +46,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                你是否确认要删除{{i.filename}}？
+                                你是否确认要删除{{i.filename}}{%if i.is_dir%}和里面的所有文件{%endif%}？
                             </div>
                             <div class="modal-footer">
                                     <a class="btn btn-danger" href="/delete?filename={{i.filename}}&dir_path={{files.dir_path}}">确认删除</a>

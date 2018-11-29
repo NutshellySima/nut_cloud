@@ -90,13 +90,27 @@ def list_file():
         dir_path = ''
         if 'dir_path' in request.values:
             dir_path = request.values['dir_path']
+        if dir_path != '':
+            if dir_path[len(dir_path) - 1] == '/':
+                dir_path = dir_path[:-1]
+                print('sub/')
         else:
             dir_path = session['user']
+        print(dir_path)
         cur_dir_abs_path = os.path.abspath(
             os.path.join('../upload_files/', dir_path))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
         anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        p = re.compile('.*\\.\\.')
+        if p.match(dir_path):
+            cur_dir_abs_path.replace('\\', '/')
+            if allowed_path == cur_dir_abs_path[:len(allowed_path)]:
+                return redirect('/list_file?dir_path=' + session['user'] +
+                                '/' + cur_dir_abs_path[len(allowed_path) + 1:])
+            if anyone_path == cur_dir_abs_path[:len(anyone_path)]:
+                return redirect('/list_file?dir_path=' + 'anyone/' +
+                                cur_dir_abs_path[len(anyone_path) + 1:])
         if allowed_path != cur_dir_abs_path[:len(allowed_path)] and\
                     anyone_path != cur_dir_abs_path[:len(anyone_path)]:
             return redirect('list_file')
@@ -127,7 +141,6 @@ def list_file():
                 }
             if is_dir:
                 file_list[i]['is_dir'] = True
-        dir_path = dir_path + '/'
         return render_template(
             'list_file.html',
             files={
@@ -270,7 +283,7 @@ def delete_file():
                 if os.path.isfile(file_path):
                     os.remove(file_path)
                 if os.path.isdir(file_path):
-                    os.rmdir(file_path)
+                    shutil.rmtree(file_path)
         if dir_path[len(dir_path) - 1] == '/':
             dir_path = dir_path[:-1]
         return redirect('list_file?dir_path=' + dir_path)
@@ -303,10 +316,6 @@ def create_dir():
             'create_dir.html', user=session['user'], dir_path=dir_path)
     dir_name = request.form['dir_name']
     dir_path = request.form['dir_path']
-    for i in range(len(dir_path)):
-        if dir_path[len(dir_path) - 1 - i] != '/':
-            dir_path = dir_path[: - i]
-            break
     allowed_path = os.path.abspath(
         os.path.join('../upload_files/', session['user']))
     dir_abs_path = os.path.abspath(

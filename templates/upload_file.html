@@ -12,6 +12,7 @@
         <input type="hidden" name='dir_path' value='{{dir_path}}'/>
         <input class="btn btn-lg btn-primary btn-block" type='file' name='file' multiple />
         <input class="btn btn-lg btn-primary btn-block" type='submit' value='上传' />
+        <a class="btn btn-lg btn-primary btn-block" href='/list_file?dir_path={{dir_path}}' enctype='multipart/form-data'>返回</a>
     </form>
     {%include 'foot.html'%}
 </body>
