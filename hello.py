@@ -145,8 +145,8 @@ def download(filename):
     try:
         if 'user' not in session:
             return redirect('login')
-        file_path = os.path.abspath((os.path.join(
-            '../upload_files/' + session['user'], filename)))
+        file_path = os.path.abspath((os.path.join('../upload_files/',
+                                                  filename)))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
         anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
@@ -303,6 +303,10 @@ def create_dir():
             'create_dir.html', user=session['user'], dir_path=dir_path)
     dir_name = request.form['dir_name']
     dir_path = request.form['dir_path']
+    for i in range(len(dir_path)):
+        if dir_path[len(dir_path) - 1 - i] != '/':
+            dir_path = dir_path[: - i]
+            break
     allowed_path = os.path.abspath(
         os.path.join('../upload_files/', session['user']))
     dir_abs_path = os.path.abspath(
@@ -315,7 +319,7 @@ def create_dir():
             os.mkdir(dir_abs_path)
         except Exception as e:
             pass
-    return redirect('list_file')  #todo p
+    return redirect('list_file?dir_path=' + dir_path)  #todo p
 
 
 @app.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
