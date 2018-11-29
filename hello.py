@@ -61,9 +61,12 @@ def upload_file():
                     os.path.join('../upload_files/' + session['user'],
                                  os.path.join(dir_path, f.filename)))
                 print(file_path)
+                anyone_path = os.path.abspath(
+                    os.path.join('../upload_files/anyone'))
                 allowed_path = os.path.abspath(
                     os.path.join('../upload_files/' + session['user']))
-                if allowed_path == file_path[:len(allowed_path)]:
+                if allowed_path == file_path[:len(allowed_path)] or\
+                    anyone_path == file_path[:len(anyone_path)]:
                     while os.path.exists(file_path) and os.path.isfile(
                             file_path):
                         split_file_name = os.path.splitext(file_path)
@@ -91,7 +94,9 @@ def list_file():
             os.path.join('../upload_files/' + session['user'], dir_path))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
-        if allowed_path != cur_dir_abs_path[:len(allowed_path)]:
+        anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        if allowed_path != cur_dir_abs_path[:len(allowed_path)] and\
+                    anyone_path != cur_dir_abs_path[:len(anyone_path)]:
             return redirect('list_file')
         file_list = os.listdir(cur_dir_abs_path)
         file_list = sorted(file_list)
@@ -143,7 +148,9 @@ def download(filename):
             '../upload_files/' + session['user'], filename)))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/' + session['user']))
-        if allowed_path == file_path[:len(allowed_path)]:
+        anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        if allowed_path == file_path[:len(allowed_path)] or\
+                    anyone_path == file_path[:len(anyone_path)]:
             return send_file(file_path)
     except Exception as e:
         print(e)
@@ -256,7 +263,9 @@ def delete_file():
             os.path.join(dir_path, filename))))
         allowed_path = os.path.abspath(
             os.path.join('../upload_files/', session['user']))
-        if allowed_path == file_path[:len(allowed_path)]:
+        anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        if allowed_path == file_path[:len(allowed_path)] or\
+                    anyone_path == file_path[:len(anyone_path)]:
             if os.path.exists(file_path):
                 if os.path.isfile(file_path):
                     os.remove(file_path)
@@ -298,10 +307,12 @@ def create_dir():
         os.path.join('../upload_files/', session['user']))
     dir_abs_path = os.path.abspath('../upload_files/' + session['user'] + '/' +
                                    dir_path + dir_name)
-    if dir_abs_path[:len(allowed_path)] == allowed_path:
+    anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+    if dir_abs_path[:len(allowed_path)] == allowed_path or\
+                    anyone_path == dir_abs_path[:len(anyone_path)]:
         try:
             os.mkdir('../upload_files/' + session['user'] + '/' + dir_path +
-                 dir_name)
+                     dir_name)
         except Exception as e:
             pass
     return redirect('list_file')  #todo p
