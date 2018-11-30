@@ -344,3 +344,27 @@ def restart():
     except Exception as e:
         print(e)
         return ('', 500)
+
+
+@app.route('/register_log')
+def register_log():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        if session['user'] == 'lemon' or session['user'] == 'smcj':
+            return send_file(os.path.abspath('./register_log.txt'))
+    except Exception as e:
+        print(e)
+    return redirect('login')
+
+
+@app.route('/login_log')
+def login_log():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        if session['user'] == 'lemon' or session['user'] == 'smcj':
+            return send_file(os.path.abspath('./login_log.txt'))
+    except Exception as e:
+        print(e)
+    return redirect('login')
