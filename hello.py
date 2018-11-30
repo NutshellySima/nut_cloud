@@ -174,6 +174,8 @@ def login():
         try:
             f = open('login_log.txt', mode='a+')
             user = request.form['user']
+            if user in ['sm']:
+                return redirect('login')
             pwd = str(request.form['pwd']).encode('utf-8')
             save_users = User.query.all()
             for i in save_users:
