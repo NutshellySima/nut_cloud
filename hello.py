@@ -386,3 +386,19 @@ def list_user():
     except Exception as e:
         print(e)
     return redirect('list_file')
+
+
+@app.route('/list_invite_code')
+def list_invite_code():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        if session['user'] == 'lemon' or session['user'] == 'smcj':
+            ic = sorted(Invite_code.query.all(), key=lambda u: u.code)
+            licc = ''
+            for i in ic:
+                licc += i.code + '<br>'
+            return str(licc)
+    except Exception as e:
+        print(e)
+    return redirect('list_file')
