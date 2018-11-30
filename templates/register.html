@@ -10,13 +10,12 @@
 
     {%include 'navbar.html'%}
     <form class="form-signin" action="register" method="POST">
-        <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-        <input type="text" class="form-control" placeholder="Account" required autofocus name='user'>
+        <h1 class="text-center h3 mb-3 font-weight-normal">注册新账号</h1>
+        <input type="text" class="form-control" placeholder="用户名" required autofocus name='user'>
         <input type="text" class="form-control" placeholder="邀请码" required name="invite_code">
-        <input type="password" class="form-control" placeholder="Password" required name="pwd">
-        <input type="password" class="form-control" placeholder="Repeat Password" required name="re_pwd">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        <a class='form-control btn btn-lg btn-primary btn-block' href="login">Go to login</a>
+        <input type="password" class="form-control" placeholder="密码" required name="pwd">
+        <input type="password" class="form-control" placeholder="再次输入密码" required name="re_pwd">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
     </form>
     {%include 'foot.html'%}
 </body>

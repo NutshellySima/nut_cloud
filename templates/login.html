@@ -11,12 +11,10 @@
 <body>
     {%include 'navbar.html'%}
     <form class="form-signin" action="login" method="POST">
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">Account</label>
-        <input type="text" class="form-control" placeholder="Account" required autofocus name='user'>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" class="form-control" placeholder="Password" required name="pwd">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <h1 class="text-center h3 mb-3 font-weight-normal">Nut Cloud</h1>
+        <input type="text" class="form-control" placeholder="用户名" required autofocus name='user'>
+        <input type="password" class="form-control" placeholder="密码" required name="pwd">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
     </form>
 
     {%include 'foot.html'%}
