@@ -357,7 +357,7 @@ def register_log():
             return send_file(os.path.abspath('./register_log.txt'))
     except Exception as e:
         print(e)
-    return redirect('login')
+    return redirect('list_file')
 
 
 @app.route('/login_log')
@@ -369,4 +369,20 @@ def login_log():
             return send_file(os.path.abspath('./login_log.txt'))
     except Exception as e:
         print(e)
-    return redirect('login')
+    return redirect('list_file')
+
+
+@app.route('/list_user')
+def list_user():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        if session['user'] == 'lemon' or session['user'] == 'smcj':
+            save_users = sorted(User.query.all(), key=lambda u: u.user)
+            list_user_name = ''
+            for i in save_users:
+                list_user_name += i.user + '<br>'
+            return str(list_user_name)
+    except Exception as e:
+        print(e)
+    return redirect('list_file')
