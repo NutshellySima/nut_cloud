@@ -182,11 +182,13 @@ def login():
                 if user == i.user and nacl.pwhash.verify(i.pwd, pwd):
                     session['user'] = user
                     f.write('User ' + str(user) + ' login at ' +
-                            str(datetime.datetime.now()) + ' successfully.\n')
+                            str(datetime.datetime.now() + datetime.timedelta(
+                                hours=8)) + ' successfully.\n')
                     return redirect('list_file')
         except Exception:
             f.write('User ' + str(user) + ' login at ' +
-                    str(datetime.datetime.now()) + ' failed.\n')
+                    str(datetime.datetime.now() +
+                        datetime.timedelta(hours=8)) + ' failed.\n')
             pass
     if 'user' in session:
         return redirect('list_file')
@@ -237,7 +239,8 @@ def register():
                         os.mkdir('../upload_files/' + request.form['user'])
                         f.write('Someone register an account named ' +
                                 request.form['user'] + ' at ' +
-                                str(datetime.datetime.now()) +
+                                str(datetime.datetime.now() +
+                                    datetime.timedelta(hours=8)) +
                                 ' successfully.\n')
                         return render_template(
                             'register_result.html', success='sucess')
@@ -247,11 +250,13 @@ def register():
         print(e.args)
     if not have_code:
         f.write('Someone do not have authority register an account named ' +
-                request.form['user'] + ' at ' + str(datetime.datetime.now()) +
+                request.form['user'] + ' at ' +
+                str(datetime.datetime.now() + datetime.timedelta(hours=8)) +
                 ' failed.\n')
     else:
         f.write('Someone have authority register an account named ' +
-                request.form['user'] + ' at ' + str(datetime.datetime.now()) +
+                request.form['user'] + ' at ' +
+                str(datetime.datetime.now() + datetime.timedelta(hours=8)) +
                 ' failed.\n')
     return render_template('register_result.html')
 
