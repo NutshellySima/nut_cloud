@@ -78,3 +78,7 @@ body {
 .dir-color{
   color: blue;
 }
+
+.navbar {
+    margin-bottom: 1%;
+}
