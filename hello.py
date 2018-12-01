@@ -54,13 +54,13 @@ def add_header(response):
         try:
             # Production
             if os.environ['FLASK_ENV'] != 'development':
-                response.headers['Content-Security-Policy'] = "default-src https:; upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"
+                response.headers['Content-Security-Policy'] = "upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"
             # Development
             else:
                 response.headers['Content-Security-Policy'] = "style-src 'nonce-"+g.nonce+"' http: https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' http: https:; object-src 'none'; base-uri 'none';"
         # Production
         except Exception:
-            response.headers['Content-Security-Policy'] = "default-src https:; upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"    
+            response.headers['Content-Security-Policy'] = "upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"    
     return response
 
 
