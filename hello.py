@@ -20,6 +20,15 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Strict',
+)
+try:
+    if os.environ['FLASK_ENV'] != 'development':
+        app.config.update(SESSION_COOKIE_SECURE=True,)
+except Exception:
+    app.config.update(SESSION_COOKIE_SECURE=True,)
 app.secret_key = b'a5g8o1.8;5]85f5n2l5[\'65g6n-2d5d42l5d5rt'
 app.config['SQLALCHEMY_DATABASE_URI'] = \
 'sqlite:///'+os.path.join(basedir,'users.sqlite')
