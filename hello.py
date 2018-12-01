@@ -8,6 +8,7 @@ from flask import (
     redirect,
     send_file,
     session,
+    g,
 )
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -15,6 +16,7 @@ import nacl.pwhash
 from hurry.filesize import size
 import string
 import random
+import base64
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -34,6 +36,32 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 'sqlite:///'+os.path.join(basedir,'users.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+def GetCspNonce():
+  """Returns a random nonce."""
+  NONCE_LENGTH = 16
+  return base64.b64encode(os.urandom(NONCE_LENGTH))
+
+# Generate a secret nonce
+@app.before_request
+def gen_nonce():
+    g.nonce = GetCspNonce().decode('utf-8')
+
+# Add CSP to prevent XSS attacks
+@app.after_request
+def add_header(response):
+    if 'Content-Security-Policy' not in response.headers:
+        try:
+            # Production
+            if os.environ['FLASK_ENV'] != 'development':
+                response.headers['Content-Security-Policy'] = "default-src https:; upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"
+            # Development
+            else:
+                response.headers['Content-Security-Policy'] = "style-src 'nonce-"+g.nonce+"' http: https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' http: https:; object-src 'none'; base-uri 'none';"
+        # Production
+        except Exception:
+            response.headers['Content-Security-Policy'] = "default-src https:; upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"    
+    return response
 
 
 def generate_invite_code(size=6, chars=string.ascii_lowercase + string.digits):
@@ -87,7 +115,7 @@ def upload_file():
     if 'dir_path' in request.values:
         dir_path = request.values['dir_path']
     return render_template(
-        'upload_file.html', user=session['user'], dir_path=dir_path)
+        'upload_file.html', user=session['user'], dir_path=dir_path,nonce=g.nonce)
 
 
 @app.route('/list_file')
@@ -153,7 +181,7 @@ def list_file():
                 'files': file_list,
                 'dir_path': dir_path
             },
-            user=session['user'])
+            user=session['user'],nonce=g.nonce)
     except Exception as e:
         print(e.args)
     return redirect('login')
@@ -201,7 +229,7 @@ def login():
             pass
     if 'user' in session:
         return redirect('list_file')
-    return render_template('login.html')
+    return render_template('login.html',nonce=g.nonce)
 
 
 class User(db.Model):
@@ -252,9 +280,9 @@ def register():
                                     datetime.timedelta(hours=8)) +
                                 ' successfully.\n')
                         return render_template(
-                            'register_result.html', success='sucess')
+                            'register_result.html', success='sucess',nonce=g.nonce)
         else:
-            return render_template('register.html')
+            return render_template('register.html',nonce=g.nonce)
     except Exception as e:
         print(e.args)
     if not have_code:
@@ -267,7 +295,7 @@ def register():
                 request.form['user'] + ' at ' +
                 str(datetime.datetime.now() + datetime.timedelta(hours=8)) +
                 ' failed.\n')
-    return render_template('register_result.html')
+    return render_template('register_result.html',nonce=g.nonce)
 
 
 @app.route('/logout')
@@ -314,12 +342,12 @@ def invite():
     if session['user'] != 'lemon' and session['user'] != 'smcj':
         return redirect('list_file')
     if request.method == 'GET':
-        return render_template('invite.html', user=session['user'])
+        return render_template('invite.html', user=session['user'],nonce=g.nonce)
     ivc = generate_invite_code(16)
     db.session.add(Invite_code(code=ivc))
     db.session.commit()
     return render_template(
-        'invite.html', invite_code=ivc, user=session['user'])
+        'invite.html', invite_code=ivc, user=session['user'],nonce=g.nonce)
 
 
 @app.route('/create_dir', methods=['GET', 'POST'])
@@ -329,7 +357,7 @@ def create_dir():
     if request.method == 'GET':
         dir_path = request.values['dir_path']
         return render_template(
-            'create_dir.html', user=session['user'], dir_path=dir_path)
+            'create_dir.html', user=session['user'], dir_path=dir_path,nonce=g.nonce)
     dir_name = request.form['dir_name']
     dir_path = request.form['dir_path']
     allowed_path = os.path.abspath(
