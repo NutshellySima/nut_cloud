@@ -199,7 +199,7 @@ def download(filename):
         anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
         if allowed_path == file_path[:len(allowed_path)] or\
                     anyone_path == file_path[:len(anyone_path)]:
-            return send_file(file_path)
+            return send_file(file_path,as_attachment=True,conditional=True)
     except Exception as e:
         print(e)
     return redirect('login')
