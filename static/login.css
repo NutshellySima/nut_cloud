@@ -82,3 +82,12 @@ body {
 .navbar {
     margin-bottom: 1%;
 }
+
+.no-padding{
+  padding: 0px 0px 0px 0px;
+}
+
+.smbut{
+  position: absolute; 
+  right: 3rem;
+}

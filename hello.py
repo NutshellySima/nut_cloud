@@ -91,7 +91,7 @@ def upload_file():
             if 'dir_path' in request.values:
                 dir_path = request.values['dir_path']
             if 'file' not in request.files:
-                return redirect(request.url)
+                return redirect(request.referrer)
             file = request.files.getlist("file")
             for f in file:
                 file_path = os.path.abspath(
@@ -114,8 +114,7 @@ def upload_file():
     dir_path = ''
     if 'dir_path' in request.values:
         dir_path = request.values['dir_path']
-    return render_template(
-        'upload_file.html', user=session['user'], dir_path=dir_path,nonce=g.nonce)
+    return redirect(request.referrer)
 
 
 @app.route('/list_file')

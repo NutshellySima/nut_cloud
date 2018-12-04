@@ -5,11 +5,21 @@
     <div class="card-body text-info">
         <h5 class="card-title"><a class="text-primary" href="/list_file?dir_path={{files.dir_path}}/..">返回上级目录</a></h5>
         <p class="card-text text-secondary">返回上级目录,在根目录时点击无效</p>
-        <hr/>
+        <hr />
         <h5 class="card-title"><a class="text-primary" href="/create_dir?dir_path={{files.dir_path}}">创建新文件夹</a></h5>
         <p class="card-text text-secondary">在此处创建一个新文件夹,点击后进入命名界面</p>
-        <hr/>
-        <h5 class="card-title"><a class="text-primary" href="/upload_file?dir_path={{files.dir_path}}">上传文件</a></h5>
+        <hr />
+        <form action='/upload_file' method="post" enctype='multipart/form-data' class="form-inline">
+            <input type="hidden" name='dir_path' value='{{files.dir_path}}' />
+            <label class="btn btn-default text-primary no-padding">
+                <h5 class="card-title">
+                    上传文件
+                </h5>
+                <input type='file' name='file' multiple hidden />
+            </label>
+            <input class="btn btn-outline-success smbut" type='submit' value='确认'/>
+            <br/>
+        </form>
         <p class="card-text text-secondary">上传文件到当前所在文件夹</p>
     </div>
 </div>
