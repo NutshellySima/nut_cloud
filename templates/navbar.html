@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-primary">
     {%if user%}
     <a class="navbar-brand" href="#">Hello, {{user}}!</a>
     {%endif%}
@@ -9,19 +9,19 @@
     <div class="navbar-collapse collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             {%if user%}
-            <li class="nav-item"> <a class="nav-link" href="list_file">我的文件</a></li>
-            <li class="nav-item"> <a class="nav-link" href="list_file?dir_path=anyone">共享文件夹</a></li>
+            <li class="nav-item"> <a class="nav-link text-light" href="list_file">我的文件</a></li>
+            <li class="nav-item"> <a class="nav-link text-light" href="list_file?dir_path=anyone">共享文件夹</a></li>
             {%if user=='lemon' or user=='smcj'%}
-            <li class="nav-item"> <a class="nav-link" href="invite">生成邀请码</a> </li>
+            <li class="nav-item"> <a class="nav-link  text-light" href="invite">生成邀请码</a> </li>
             {%endif%}
             <li class="nav-item">
                 <form class="nav-item" action="/logout" method="post">
-                    <button class="btn btn-link nav-link" type="submit">注销</button> 
+                    <button class="btn btn-link nav-link text-light" type="submit">注销</button> 
                 </form>
             </li>
             {%else%}
-            <li class="nav-item"><a class="nav-link" href="register">注册</a></li>
-            <li class="nav-item"><a class="nav-link" href="login">登录</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="register">注册</a></li>
+            <li class="nav-item"><a class="nav-link text-light" href="login">登录</a></li>
             {%endif%}
         </ul>
     </div>
