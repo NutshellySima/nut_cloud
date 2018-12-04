@@ -298,13 +298,13 @@ def register():
     return render_template('register_result.html',nonce=g.nonce)
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return redirect('login')
 
 
-@app.route('/delete')
+@app.route('/delete', methods=['POST'])
 def delete_file():
     try:
         if 'user' not in session:
