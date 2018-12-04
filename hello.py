@@ -81,7 +81,7 @@ def nut_cloud():
     return redirect('login')
 
 
-@app.route('/upload_file', methods=['GET', 'POST'])
+@app.route('/upload_file', methods=['POST'])
 def upload_file():
     try:
         if 'user' not in session:
