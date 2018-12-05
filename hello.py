@@ -9,6 +9,7 @@ from flask import (
     send_file,
     session,
     g,
+    make_response,
 )
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -300,7 +301,10 @@ def register():
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
-    return redirect('login')
+    r=make_response(redirect('login'))
+    # Try to remove all persistant XSS attacks.
+    r.headers.set('Clear-Site-Data', '"*"')
+    return r
 
 
 @app.route('/delete', methods=['POST'])
