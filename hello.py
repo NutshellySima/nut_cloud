@@ -65,8 +65,8 @@ def add_header(response):
     return response
 
 
-def generate_invite_code(size=6, chars=string.ascii_lowercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+def generate_invite_code():
+    return GetCspNonce().decode('utf-8')
 
 
 @app.route('/')
@@ -346,7 +346,7 @@ def invite():
         return redirect('list_file')
     if request.method == 'GET':
         return render_template('invite.html', user=session['user'],nonce=g.nonce)
-    ivc = generate_invite_code(16)
+    ivc = generate_invite_code()
     db.session.add(Invite_code(code=ivc))
     db.session.commit()
     return render_template(
