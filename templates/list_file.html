@@ -34,30 +34,29 @@
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
                     删除
                 </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="I{{loop.index}}ModalCenter" tabindex="-1" role="dialog" aria-labelledby="I{{loop.index}}ModalCenterTitle"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="I{{loop.index}}ModalCenterTitle">删除确认</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                你是否确认要删除{{i.filename}}{%if i.is_dir%}和里面的所有文件{%endif%}？
-                            </div>
-                            <div class="modal-footer">
-                                <form action="/delete" method="post">
-                                    <input type="hidden" name="filename" value="{{i.filename}}" />
-                                    <input type="hidden" name="dir_path" value="{{files.dir_path}}" />
-                                    <button class="btn btn-danger" type="submit">确认删除</button>
-                                </form>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                            </div>
-                        </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="I{{loop.index}}ModalCenter" tabindex="-1" role="dialog" aria-labelledby="I{{loop.index}}ModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="I{{loop.index}}ModalCenterTitle">删除确认</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        你是否确认要删除{{i.filename}}{%if i.is_dir%}和里面的所有文件{%endif%}？
+                    </div>
+                    <div class="modal-footer">
+                        <form action="/delete" method="post">
+                            <input type="hidden" name="filename" value="{{i.filename}}" />
+                            <input type="hidden" name="dir_path" value="{{files.dir_path}}" />
+                            <button class="btn btn-danger" type="submit">确认删除</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     </div>
                 </div>
             </div>
