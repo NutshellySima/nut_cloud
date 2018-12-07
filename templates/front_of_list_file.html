@@ -9,11 +9,11 @@
         <h5 class="card-title"><a class="text-primary" href="/create_dir?dir_path={{files.dir_path}}">创建新文件夹</a></h5>
         <p class="card-text text-secondary">在此处创建一个新文件夹,点击后进入命名界面</p>
         <hr />
-        <h5 class="card-title"><a class="text-primary" href="/tar?dir_path={{files.dir_path}}" download="{{files.dir_path}}">打包下载</a></h5>
+        <h5 class="card-title"><a class="text-primary" href="/tar?dir_path={{files.dir_path}}">打包下载</a></h5>
         <p class="card-text text-secondary">打包下载当前目录文件</p>
         <hr />
         <form action='/upload_file' method="post" enctype='multipart/form-data' class="form-inline">
-            <input type="hidden" name='dir_path' value='{{files.dir_path}}' />
+            <input id="sima-magic" type="hidden" name='dir_path' value='{{files.dir_path}}' />
             <label class="btn btn-default text-primary no-padding">
                 <h5 class="card-title">
                     上传文件

@@ -31,7 +31,7 @@
             </div>
             <div class="card-footer">
                 {%if i.is_dir%}
-                <a class="btn btn-secondary" href="tar?dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}" download="{{i.filename}}">打包下载</a>
+                <a class="btn btn-secondary" href="tar?dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">打包下载</a>
                 {%endif%}
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
@@ -65,6 +65,16 @@
             </div>
         </div>
         {%endfor%}
+        <div class="card border-dark">
+            <div class="card-header text-info">拖拽上传</div>
+            <div class="card-body">
+                <progress id="drag_upload_progress" max="100" value="0" class="fullwidth"></progress>
+                <br />
+                <div id="drop_zone">
+                    <p>拖拽一个或多个文件到这个区域上传</p>
+                </div>
+            </div>
+        </div>
     </div>
     {%include 'foot.html'%}
 
