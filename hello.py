@@ -1,6 +1,9 @@
 import os
 import re
 import shutil
+import tempfile
+import weakref
+import tarfile
 from flask import (
     Flask,
     render_template,
@@ -18,6 +21,26 @@ from hurry.filesize import size
 import string
 import random
 import base64
+
+class FileRemover(object):
+    def __init__(self):
+        self.weak_references = dict()  # weak_ref -> filepath to remove
+
+    def cleanup_once_done(self, response, filepath):
+        wr = weakref.ref(response, self._do_cleanup)
+        self.weak_references[wr] = filepath
+
+    def _do_cleanup(self, wr):
+        filepath = self.weak_references[wr]
+        print('Deleting %s' % filepath)
+        try:
+            shutil.rmtree(filepath)
+        except Exception as e:
+            f = open('delete_log.txt', mode='a+')
+            f.write(filepath)
+            f.close()
+
+file_remover = FileRemover()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -227,6 +250,8 @@ def login():
                     str(datetime.datetime.now() +
                         datetime.timedelta(hours=8)) + ' failed.\n')
             pass
+        finally:
+            f.close()
     if 'user' in session:
         return redirect('list_file')
     return render_template('login.html',nonce=g.nonce)
@@ -250,10 +275,10 @@ class Invite_code(db.Model):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     try:
+        f = open('register_log.txt', mode='a+')
         if 'user' in session:
             return redirect('list_file')
         if request.method == 'POST':
-            f = open('register_log.txt', mode='a+')
             icode = Invite_code.query.all()
             icodel = []
             for i in range(len(icode)):
@@ -285,6 +310,9 @@ def register():
             return render_template('register.html',nonce=g.nonce)
     except Exception as e:
         print(e.args)
+    finally:
+        f.close()
+    f = open('register_log.txt', mode='a+')
     if not have_code:
         f.write('Someone do not have authority register an account named ' +
                 request.form['user'] + ' at ' +
@@ -295,6 +323,7 @@ def register():
                 request.form['user'] + ' at ' +
                 str(datetime.datetime.now() + datetime.timedelta(hours=8)) +
                 ' failed.\n')
+    f.close()
     return render_template('register_result.html',nonce=g.nonce)
 
 
@@ -444,6 +473,70 @@ def list_invite_code():
             for i in ic:
                 licc += i.code + '<br>'
             return str(licc)
+    except Exception as e:
+        print(e)
+    return redirect('list_file')
+
+@app.route('/tar')
+def tar():
+    try:
+        # Check login
+        if 'user' not in session:
+            return redirect('login')
+        dir_path = ''
+        if 'dir_path' in request.values:
+            dir_path = request.values['dir_path']
+        # Pop '/'
+        if dir_path != '':
+            if dir_path[len(dir_path) - 1] == '/':
+                dir_path = dir_path[:-1]
+        else:
+            # Set dir to user dir
+            dir_path = session['user']
+        # Check validity
+        cur_dir_abs_path = os.path.abspath(
+            os.path.join('../upload_files/', dir_path))
+        allowed_path = os.path.abspath(
+            os.path.join('../upload_files/' + session['user']))
+        anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        # Windows
+        p = re.compile('.*\\.\\.')
+        if p.match(dir_path):
+            cur_dir_abs_path.replace('\\', '/')
+            if allowed_path == cur_dir_abs_path[:len(allowed_path)]:
+                return redirect('/tar?dir_path=' + session['user'] +
+                                '/' + cur_dir_abs_path[len(allowed_path) + 1:])
+            if anyone_path == cur_dir_abs_path[:len(anyone_path)]:
+                return redirect('/tar?dir_path=' + 'anyone/' +
+                                cur_dir_abs_path[len(anyone_path) + 1:])
+        # Invalid
+        if allowed_path != cur_dir_abs_path[:len(allowed_path)] and\
+                    anyone_path != cur_dir_abs_path[:len(anyone_path)]:
+            return redirect('tar')
+
+        tempdir = tempfile.mkdtemp()
+        def reset(tarinfo):
+            tarinfo.uid = tarinfo.gid = 0
+            tarinfo.uname = tarinfo.gname = session['user']
+            return tarinfo
+        tarpath=os.path.join(tempdir, dir_path.split('/')[-1]+".tar")
+        tar = tarfile.open(tarpath, "w")
+        tar.add(cur_dir_abs_path, dir_path.split('/')[-1], filter=reset)
+        tar.close()
+        resp = send_file(tarpath,as_attachment=True)
+        file_remover.cleanup_once_done(resp, tempdir)
+        return resp
+    except Exception as e:
+        pass
+    return redirect('login')
+
+@app.route('/delete_log')
+def delete_log():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        if session['user'] == 'lemon' or session['user'] == 'smcj':
+            return send_file(os.path.abspath('./delete_log.txt'))
     except Exception as e:
         print(e)
     return redirect('list_file')
