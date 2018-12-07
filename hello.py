@@ -540,3 +540,14 @@ def delete_log():
     except Exception as e:
         print(e)
     return redirect('list_file')
+
+@app.route('/logs')
+def logs():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        if session['user'] == 'lemon' or session['user'] == 'smcj':
+            return render_template('logs.html',user=session['user'],nonce=g.nonce)
+    except Exception as e:
+        print(e)
+    return redirect('list_file')
