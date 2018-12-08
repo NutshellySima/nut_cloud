@@ -305,7 +305,7 @@ def register():
                                     datetime.timedelta(hours=8)) +
                                 ' successfully.\n')
                         return render_template(
-                            'register_result.html', success='sucess',nonce=g.nonce)
+                            'register_result.html', success='sucess',nonce=g.nonce),201
         else:
             return render_template('register.html',nonce=g.nonce)
     except Exception as e:
@@ -324,7 +324,7 @@ def register():
                 str(datetime.datetime.now() + datetime.timedelta(hours=8)) +
                 ' failed.\n')
     f.close()
-    return render_template('register_result.html',nonce=g.nonce)
+    return render_template('register_result.html',nonce=g.nonce),403
 
 
 @app.route('/logout', methods=['POST'])
@@ -379,7 +379,7 @@ def invite():
     db.session.add(Invite_code(code=ivc))
     db.session.commit()
     return render_template(
-        'invite.html', invite_code=ivc, user=session['user'],nonce=g.nonce)
+        'invite.html', invite_code=ivc, user=session['user'],nonce=g.nonce),201
 
 
 @app.route('/create_dir', methods=['GET', 'POST'])
