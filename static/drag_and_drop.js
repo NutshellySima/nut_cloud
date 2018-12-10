@@ -42,16 +42,6 @@ function dropHandler(ev) {
 
     xhr.open('POST', '/upload_file');
 
-    xhr.onprogress = function (e) {
-        if (e.lengthComputable) {
-            var percentComplete = e.loaded / e.total * 100;
-            document.getElementById("drag_upload_progress").value = percentComplete;
-        } else {
-            if (document.getElementById("drag_upload_progress").value < 100)
-                document.getElementById("drag_upload_progress").value = document.getElementById("drag_upload_progress").value + 1;
-        }
-    }
-
     xhr.onload = function () {
         // Request finished. Do processing here.
         location.reload();
@@ -61,7 +51,7 @@ function dropHandler(ev) {
     xhr.send(form);
 
     // Pass event to removeDragData for cleanup
-    removeDragData(ev)
+    removeDragData(ev);
 }
 
 
@@ -72,8 +62,14 @@ function dragOverHandler(ev) {
     ev.preventDefault();
 }
 
+function fileUploadHandler(ev){
+    console.log("auto uploading!");
+    document.getElementById('sima-upload-form').submit();
+}
+
 // Add event listeners
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('drop_zone').addEventListener('drop', dropHandler);
     document.getElementById('drop_zone').addEventListener('dragover', dragOverHandler);
+    document.getElementById('sima-upload-file').addEventListener('change',fileUploadHandler);
 });
