@@ -588,7 +588,9 @@ def search():
             return redirect('list_file')
         file_list = glob.glob(cur_dir_abs_path+"/**/*"+glob.escape(search_name)+"*",recursive=True)
         file_list = sorted(file_list)
+        file_list=[i for i in file_list if os.path.commonpath([os.path.abspath(i),cur_dir_abs_path]) == cur_dir_abs_path]
         for i in range(len(file_list)):
+            file_list[i]=os.path.abspath(file_list[i])
             file_list[i]=os.path.relpath(file_list[i],cur_dir_abs_path)
             file_size = os.path.getsize(
                 os.path.abspath(
