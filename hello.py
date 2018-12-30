@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import weakref
 import tarfile
+import glob
 from flask import (
     Flask,
     render_template,
@@ -551,3 +552,75 @@ def logs():
     except Exception as e:
         print(e)
     return redirect('list_file')
+
+@app.route('/search')
+def search():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        dir_path = ''
+        search_name=''
+        if 'search_name' in request.values:
+            search_name = request.values['search_name']
+        if 'dir_path' in request.values:
+            dir_path = request.values['dir_path']
+        if dir_path != '':
+            if dir_path[len(dir_path) - 1] == '/':
+                dir_path = dir_path[:-1]
+        else:
+            dir_path = session['user']
+        cur_dir_abs_path = os.path.abspath(
+            os.path.join('../upload_files/', dir_path))
+        allowed_path = os.path.abspath(
+            os.path.join('../upload_files/' + session['user']))
+        anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+        p = re.compile('.*\\.\\.')
+        if p.match(dir_path):
+            cur_dir_abs_path.replace('\\', '/')
+            if allowed_path == cur_dir_abs_path[:len(allowed_path)]:
+                return redirect('/search?dir_path=' + session['user'] +
+                                '/' + cur_dir_abs_path[len(allowed_path) + 1:])
+            if anyone_path == cur_dir_abs_path[:len(anyone_path)]:
+                return redirect('/search?dir_path=' + 'anyone/' +
+                                cur_dir_abs_path[len(anyone_path) + 1:])
+        if allowed_path != cur_dir_abs_path[:len(allowed_path)] and\
+                    anyone_path != cur_dir_abs_path[:len(anyone_path)]:
+            return redirect('list_file')
+        file_list = glob.glob(cur_dir_abs_path+"/**/*"+glob.escape(search_name)+"*",recursive=True)
+        file_list = sorted(file_list)
+        for i in range(len(file_list)):
+            file_list[i]=os.path.relpath(file_list[i],cur_dir_abs_path)
+            file_size = os.path.getsize(
+                os.path.abspath(
+                    os.path.join(cur_dir_abs_path, str(file_list[i]))))
+            file_name = str(file_list[i])
+            split_file_name = os.path.splitext(
+                os.path.join(cur_dir_abs_path, str(file_list[i])))
+            is_dir = os.path.isdir(
+                os.path.join(cur_dir_abs_path, str(file_list[i])))
+            if len(split_file_name[1]):
+                file_name = file_name[:-len(split_file_name[1])]
+                file_list[i] = {
+                    'size': str(size(file_size)),
+                    'name': file_name,
+                    'ext': str(split_file_name[1][1:]),
+                    'filename': file_name + "." + str(split_file_name[1][1:])
+                }
+            else:
+                file_list[i] = {
+                    'size': str(size(file_size)),
+                    'name': file_name,
+                    'filename': file_name
+                }
+            if is_dir:
+                file_list[i]['is_dir'] = True
+        return render_template(
+            'list_file.html',
+            files={
+                'files': file_list,
+                'dir_path': dir_path
+            },
+            user=session['user'],nonce=g.nonce)
+    except Exception as e:
+        print(e.args)
+    return redirect('login')
