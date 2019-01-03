@@ -553,6 +553,16 @@ def logs():
         print(e)
     return redirect('list_file')
 
+@app.route('/maogai')
+def maogai():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        return render_template('maogai.html',user=session['user'],nonce=g.nonce)
+    except Exception as e:
+        print(e)
+    return redirect('login')
+
 @app.route('/search')
 def search():
     try:
