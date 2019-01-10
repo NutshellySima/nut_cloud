@@ -181,7 +181,6 @@ def shares():
         for i in info:
             rel_path=os.path.relpath(i.filename,'../upload_files/')
             sls.append((i.link,rel_path,str(i.expiret)))
-        print(sls)
         return render_template(
             'shares.html',
             user=session['user'],nonce=g.nonce,links=sls)
