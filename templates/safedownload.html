@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <title>安全下载</title>
+    {%include 'head.html'%}
+</head>
+
+<body>
+
+    {%include 'navbar.html'%}
+    <div class="container">
+        <div class="text-center">
+            <form class="form-signin" action="ss" method="POST">
+                <h1 class="text-center h3 mb-3 font-weight-normal">安全下载文件</h1>
+                <input type="text" value="{{link}}" name='link' hidden>
+                <input type="password" class="form-control" placeholder="分享密码" required name="pwd" value="">
+                <button class="btn btn-lg btn-primary btn-block" type="submit">确定</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+
+</html>

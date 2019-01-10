@@ -432,7 +432,25 @@ def share():
 @app.route('/s')
 def s():
     si=Share_Info.query.filter_by(link=request.values['link']).first()
+    if si.expiret!=None:
+        if datetime.datetime.utcnow()>si.expiret:
+            return redirect('list_file')
+    if si.passwd!=None:
+        return render_template(
+            'safedownload.html', user=session['user'], link=request.values['link'],nonce=g.nonce)
     return send_file(si.filename,as_attachment=True,conditional=True)
+
+@app.route('/ss', methods=['POST'])
+def ss():
+    si=Share_Info.query.filter_by(link=request.values['link']).first()
+    if si.expiret!=None:
+        if datetime.datetime.utcnow()>si.expiret:
+            return redirect('list_file')
+    if si.passwd==None:
+        return redirect('list_file')
+    if nacl.pwhash.verify(si.passwd,str(request.form['pwd']).encode('utf-8')):
+        return send_file(si.filename,as_attachment=True,conditional=True)
+    return redirect('list_file')
 
 @app.route('/create_dir', methods=['GET', 'POST'])
 def create_dir():
