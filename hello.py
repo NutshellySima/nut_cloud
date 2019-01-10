@@ -429,6 +429,11 @@ def share():
         return redirect('list_file')
 
 
+@app.route('/s')
+def s():
+    si=Share_Info.query.filter_by(link=request.values['link']).first()
+    return send_file(si.filename,as_attachment=True,conditional=True)
+
 @app.route('/create_dir', methods=['GET', 'POST'])
 def create_dir():
     if 'user' not in session:
