@@ -170,6 +170,25 @@ def upload_file():
     return redirect(request.referrer)
 
 
+
+@app.route('/shares')
+def shares():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        info=Share_Info.query.filter_by(username=session['user'])
+        sls=[]
+        for i in info:
+            rel_path=os.path.relpath(i.filename,'../upload_files/')
+            sls.append((i.link,rel_path,str(i.expiret)))
+        print(sls)
+        return render_template(
+            'shares.html',
+            user=session['user'],nonce=g.nonce,links=sls)
+    except Exception as e:
+        print(e.args)
+    return redirect('login')
+
 @app.route('/list_file')
 def list_file():
     try:
