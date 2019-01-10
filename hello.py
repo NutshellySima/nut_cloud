@@ -395,6 +395,12 @@ def delete_file():
                 if os.path.isdir(file_path):
                     print('rmdir')
                     if file_path != allowed_path and file_path != anyone_path:
+                        file_list = glob.glob(file_path+"/**/*",recursive=True)
+                        for i in file_list:
+                            si=Share_Info.query.filter_by(filename=i)
+                            for i in si:
+                                db.session.delete(i)
+                        db.session.commit()
                         shutil.rmtree(file_path)
                     else:
                         print('ban')
