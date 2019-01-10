@@ -388,6 +388,10 @@ def delete_file():
             if os.path.exists(file_path):
                 if os.path.isfile(file_path):
                     os.remove(file_path)
+                    si=Share_Info.query.filter_by(filename=file_path)
+                    for i in si:
+                        db.session.delete(i)
+                    db.session.commit()
                 if os.path.isdir(file_path):
                     print('rmdir')
                     if file_path != allowed_path and file_path != anyone_path:
