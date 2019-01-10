@@ -396,6 +396,38 @@ def invite():
     return render_template(
         'invite.html', invite_code=ivc, user=session['user'],nonce=g.nonce),201
 
+@app.route('/share',methods=['GET','POST'])
+def share():
+    if 'user' not in session:
+        return redirect('login')
+    if request.method == 'GET':
+        dir_path = request.values['dir_path']
+        return render_template('share.html', user=session['user'],path=dir_path,nonce=g.nonce)
+    filename=request.values['filename']
+    file_path = os.path.abspath((os.path.join('../upload_files/',
+                                                  filename)))
+    allowed_path = os.path.abspath(
+            os.path.join('../upload_files/' + session['user']))
+    anyone_path = os.path.abspath(os.path.join('../upload_files/anyone'))
+    if allowed_path == file_path[:len(allowed_path)] or\
+                anyone_path == file_path[:len(anyone_path)]:
+        sl = generate_invite_code()
+        si=Share_Info(link=sl,filename=file_path,username=request.values['user'])
+        if request.values['time']!='':
+            t=datetime.datetime.utcnow()
+            delta=datetime.timedelta(days=int(request.values['time']))
+            t=t+delta
+            si.expiret=t
+        if request.values['pwd']!='':
+            si.passwd=nacl.pwhash.str(
+                            request.form['pwd'].encode('utf-8'))
+        db.session.add(si)
+        db.session.commit()
+        return render_template(
+            'share.html', user=session['user'],nonce=g.nonce,share_link=sl),201
+    else:
+        return redirect('list_file')
+
 
 @app.route('/create_dir', methods=['GET', 'POST'])
 def create_dir():

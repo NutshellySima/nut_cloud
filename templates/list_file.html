@@ -32,6 +32,8 @@
             <div class="card-footer">
                 {%if i.is_dir%}
                 <a class="btn btn-secondary" href="tar?dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">打包下载</a>
+                {%else%}
+                <a class="btn btn-info" href="share?user={{user}}&dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">分享</a>
                 {%endif%}
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
