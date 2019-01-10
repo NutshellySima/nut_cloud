@@ -471,6 +471,21 @@ def ss():
         return send_file(si.filename,as_attachment=True,conditional=True)
     return redirect('list_file')
 
+
+@app.route('/delete_link', methods=['POST'])
+def delete_link():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        si=Share_Info.query.filter_by(link=request.values['link']).first()
+        if session['user']!=si.username:
+            return redirect('login')
+        db.session.delete(si)
+        db.session.commit()
+    except Exception as e:
+        print(e.args)
+    return redirect('login')
+
 @app.route('/create_dir', methods=['GET', 'POST'])
 def create_dir():
     if 'user' not in session:

@@ -19,10 +19,37 @@
                     <p class="card-text">{{i[2]}}</p>
                 </div>
                 <div class="card-footer">
-                    
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
+                        取消分享
+                    </button>
                 </div>
             </div>
-            {%endfor%}
+             <!-- Modal -->
+             <div class="modal fade" id="I{{loop.index}}ModalCenter" tabindex="-1" role="dialog" aria-labelledby="I{{loop.index}}ModalCenterTitle"
+             aria-hidden="true">
+             <div class="modal-dialog modal-dialog-centered" role="document">
+                 <div class="modal-content">
+                     <div class="modal-header">
+                         <h5 class="modal-title" id="I{{loop.index}}ModalCenterTitle">取消分享确认</h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                         </button>
+                     </div>
+                     <div class="modal-body">
+                         你是否确认要取消分享{{i[1]}},链接为{{i[0]}}
+                     </div>
+                     <div class="modal-footer">
+                         <form action="/delete_link" method="post">
+                             <input type="hidden" name="link" value="{{i[0]}}" />
+                             <button class="btn btn-danger" type="submit">确认取消分享</button>
+                         </form>
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                     </div>
+                 </div>
+             </div>
+         </div>
+    {%endfor%}
        
     </div>
     {%include 'foot.html'%}
