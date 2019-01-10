@@ -62,6 +62,34 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
+class User(db.Model):
+    user = db.Column(db.String(1024), primary_key=True)
+    pwd = db.Column(db.String(1024))
+
+    def __repr__(self):
+        return '<user %r>' % self.user
+
+
+class Invite_code(db.Model):
+    code = db.Column(db.String(16), primary_key=True)
+
+    def __repr__(self):
+        return '<user %r>' % self.code
+
+class Share_Info(db.Model):
+    link = db.Column(db.String(100), primary_key=True)
+    filename = db.Column(db.String(300), nullable=False)
+    username = db.Column(db.String(10), nullable=False)
+    passwd = db.Column(db.String(1024), nullable=True)
+    expiret = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return '<Share_Info %r>' % self.link
+
+db.create_all()
+db.session.commit()
+
 def GetCspNonce():
   """Returns a random nonce."""
   NONCE_LENGTH = 16
@@ -257,20 +285,6 @@ def login():
         return redirect('list_file')
     return render_template('login.html',nonce=g.nonce)
 
-
-class User(db.Model):
-    user = db.Column(db.String(1024), primary_key=True)
-    pwd = db.Column(db.String(1024))
-
-    def __repr__(self):
-        return '<user %r>' % self.user
-
-
-class Invite_code(db.Model):
-    code = db.Column(db.String(16), primary_key=True)
-
-    def __repr__(self):
-        return '<user %r>' % self.code
 
 
 @app.route('/register', methods=['GET', 'POST'])
