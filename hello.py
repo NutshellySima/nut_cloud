@@ -181,7 +181,10 @@ def shares():
         sls=[]
         for i in info:
             rel_path=os.path.relpath(i.filename,'../upload_files/')
-            sls.append((i.link,rel_path,str(i.expiret)))
+            Pass=True
+            if i.passwd is None:
+                Pass=False
+            sls.append((i.link,rel_path,str(i.expiret), Pass))
         return render_template(
             'shares.html',
             user=session['user'],nonce=g.nonce,links=sls)
@@ -505,7 +508,7 @@ def delete_link():
         db.session.commit()
     except Exception as e:
         print(e.args)
-    return redirect('login')
+    return redirect('shares')
 
 @app.route('/create_dir', methods=['GET', 'POST'])
 def create_dir():
