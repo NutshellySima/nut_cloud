@@ -25,8 +25,8 @@
                 <h1 class="text-center h3 mb-3 font-weight-normal">生成分享链接</h1>
                 <input type="text" value="{{user}}" name='user' hidden>
                 <input type="text" value="{{path}}" name='filename' hidden>
-                <input type="number" class="form-control" placeholder="有效天数（选填）" autofocus name='time' value="">
-                <input type="password" class="form-control" placeholder="分享密码（选填）" name="pwd" value="">
+                <input type="number" class="form-control" placeholder="有效天数（选填）" autofocus name='time' value="" min="1">
+                <input type="text" class="form-control" placeholder="分享密码（选填）" name="pwd" value="">
                 <button class="btn btn-lg btn-primary btn-block" type="submit">确定</button>
             </form>
         </div>

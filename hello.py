@@ -15,6 +15,7 @@ from flask import (
     g,
     make_response,
 )
+from flask import abort
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import nacl.pwhash
@@ -93,7 +94,7 @@ db.session.commit()
 def GetCspNonce():
   """Returns a random nonce."""
   NONCE_LENGTH = 16
-  return base64.b64encode(os.urandom(NONCE_LENGTH))
+  return base64.urlsafe_b64encode(os.urandom(NONCE_LENGTH))
 
 # Generate a secret nonce
 @app.before_request
@@ -460,24 +461,35 @@ def share():
 @app.route('/s')
 def s():
     si=Share_Info.query.filter_by(link=request.values['link']).first()
+    if si is None:
+        abort(404)
     if si.expiret!=None:
         if datetime.datetime.utcnow()>si.expiret:
             return redirect('list_file')
     if si.passwd!=None:
-        return render_template(
-            'safedownload.html', user=session['user'], link=request.values['link'],nonce=g.nonce)
+        if 'user' in session:
+            return render_template(
+                'safedownload.html', user=session['user'], link=request.values['link'],nonce=g.nonce)
+        else:
+            return render_template(
+                'safedownload.html', link=request.values['link'],nonce=g.nonce)
     return send_file(si.filename,as_attachment=True,conditional=True)
 
 @app.route('/ss', methods=['POST'])
 def ss():
     si=Share_Info.query.filter_by(link=request.values['link']).first()
+    if si is None:
+        abort(404)
     if si.expiret!=None:
         if datetime.datetime.utcnow()>si.expiret:
             return redirect('list_file')
     if si.passwd==None:
         return redirect('list_file')
-    if nacl.pwhash.verify(si.passwd,str(request.form['pwd']).encode('utf-8')):
-        return send_file(si.filename,as_attachment=True,conditional=True)
+    try:
+        if nacl.pwhash.verify(si.passwd,str(request.form['pwd']).encode('utf-8')):
+            return send_file(si.filename,as_attachment=True,conditional=True)
+    except Exception:
+        abort(403)
     return redirect('list_file')
 
 
