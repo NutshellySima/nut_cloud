@@ -293,8 +293,8 @@ def login():
             for i in save_users:
                 if user == i.user and nacl.pwhash.verify(i.pwd, pwd):
                     results = zxcvbn(str(request.form['pwd']), user_inputs=[user])
-                    # 3-4 sufficient passwd
-                    if results['score'] >=3:
+                    # 2-4 sufficient passwd
+                    if results['score'] >=2:
                         session['user'] = user
                         f.write('User ' + str(user) + ' login at ' +
                                 str(datetime.datetime.now() + datetime.timedelta(
@@ -327,8 +327,8 @@ def register():
             return redirect('list_file')
         if request.method == 'POST':
             results = zxcvbn(str(request.form['pwd']), user_inputs=[str(request.form['user'])])
-            # 0-2 insufficient passwd
-            if results['score'] <3:
+            # 0-1 insufficient passwd
+            if results['score'] <2:
                 return render_template('badpasswd.html',nonce=g.nonce)
             icode = Invite_code.query.all()
             icodel = []
