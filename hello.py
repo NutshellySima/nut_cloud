@@ -23,6 +23,7 @@ from hurry.filesize import size
 import string
 import random
 import base64
+from zxcvbn import zxcvbn
 
 class FileRemover(object):
     def __init__(self):
@@ -291,13 +292,22 @@ def login():
             save_users = User.query.all()
             for i in save_users:
                 if user == i.user and nacl.pwhash.verify(i.pwd, pwd):
-                    session['user'] = user
-                    f.write('User ' + str(user) + ' login at ' +
-                            str(datetime.datetime.now() + datetime.timedelta(
-                                hours=8)) + ' successfully.\n')
-                    return redirect('list_file')
-        except Exception:
-            f.write('User ' + str(user) + ' login at ' +
+                    results = zxcvbn(str(request.form['pwd']), user_inputs=[user])
+                    # 3-4 sufficient passwd
+                    if results['score'] >=3:
+                        session['user'] = user
+                        f.write('User ' + str(user) + ' login at ' +
+                                str(datetime.datetime.now() + datetime.timedelta(
+                                    hours=8)) + ' successfully with a password strength of '+str(results['score'])+'.\n')
+                        return redirect('list_file')
+                    else:
+                        f.write('!!! User ' + str(user) + ' login at ' +
+                                str(datetime.datetime.now() + datetime.timedelta(
+                                    hours=8)) + ' unsuccessfully with a password strength of '+str(results['score'])+'.\n')
+                        return render_template('badpasswd.html',nonce=g.nonce)
+        except Exception as e:
+            print(e)
+            f.write('!!! User ' + str(user) + ' login at ' +
                     str(datetime.datetime.now() +
                         datetime.timedelta(hours=8)) + ' failed.\n')
             pass
@@ -316,6 +326,10 @@ def register():
         if 'user' in session:
             return redirect('list_file')
         if request.method == 'POST':
+            results = zxcvbn(str(request.form['pwd']), user_inputs=[str(request.form['user'])])
+            # 0-2 insufficient passwd
+            if results['score'] <3:
+                return render_template('badpasswd.html',nonce=g.nonce)
             icode = Invite_code.query.all()
             icodel = []
             for i in range(len(icode)):

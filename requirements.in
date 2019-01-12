@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 PyNaCl
 hurry.filesize
 uWSGI
+zxcvbn
