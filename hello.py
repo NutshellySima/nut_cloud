@@ -68,6 +68,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     user = db.Column(db.String(1024), primary_key=True)
     pwd = db.Column(db.String(1024))
+    isAdmin=db.Column(db.Integer,nullable=False)
 
     def __repr__(self):
         return '<user %r>' % self.user
@@ -339,6 +340,7 @@ def register():
                 db.session.add(
                     User(
                         user=str(request.form['user']),
+                        isAdmin=0,
                         pwd=nacl.pwhash.str(
                             request.form['pwd'].encode('utf-8'))))
                 pattern = re.compile("[A-Za-z0-9_-]+")
@@ -432,7 +434,8 @@ def delete_file():
 def invite():
     if 'user' not in session:
         return redirect('login')
-    if session['user'] != 'lemon' and session['user'] != 'smcj':
+    record=User.query.filter_by(user=session['user']).first()
+    if record.isAdmin==0:
         return redirect('list_file')
     if request.method == 'GET':
         return render_template('invite.html', user=session['user'],nonce=g.nonce)
@@ -569,7 +572,8 @@ def register_log():
     try:
         if 'user' not in session:
             return redirect('login')
-        if session['user'] == 'lemon' or session['user'] == 'smcj':
+        record=User.query.filter_by(user=session['user']).first()
+        if record.isAdmin==1:
             return send_file(os.path.abspath('./register_log.txt'))
     except Exception as e:
         print(e)
@@ -581,7 +585,8 @@ def login_log():
     try:
         if 'user' not in session:
             return redirect('login')
-        if session['user'] == 'lemon' or session['user'] == 'smcj':
+        record=User.query.filter_by(user=session['user']).first()
+        if record.isAdmin==1:
             return send_file(os.path.abspath('./login_log.txt'))
     except Exception as e:
         print(e)
@@ -593,7 +598,8 @@ def list_user():
     try:
         if 'user' not in session:
             return redirect('login')
-        if session['user'] == 'lemon' or session['user'] == 'smcj':
+        record=User.query.filter_by(user=session['user']).first()
+        if record.isAdmin==1:
             save_users = sorted(User.query.all(), key=lambda u: u.user)
             list_user_name = ''
             for i in save_users:
@@ -609,7 +615,8 @@ def list_invite_code():
     try:
         if 'user' not in session:
             return redirect('login')
-        if session['user'] == 'lemon' or session['user'] == 'smcj':
+        record=User.query.filter_by(user=session['user']).first()
+        if record.isAdmin==1:
             ic = sorted(Invite_code.query.all(), key=lambda u: u.code)
             licc = ''
             for i in ic:
@@ -677,7 +684,8 @@ def delete_log():
     try:
         if 'user' not in session:
             return redirect('login')
-        if session['user'] == 'lemon' or session['user'] == 'smcj':
+        record=User.query.filter_by(user=session['user']).first()
+        if record.isAdmin==1:
             return send_file(os.path.abspath('./delete_log.txt'))
     except Exception as e:
         print(e)
@@ -688,7 +696,8 @@ def logs():
     try:
         if 'user' not in session:
             return redirect('login')
-        if session['user'] == 'lemon' or session['user'] == 'smcj':
+        record=User.query.filter_by(user=session['user']).first()
+        if record.isAdmin==1:
             return render_template('logs.html',user=session['user'],nonce=g.nonce)
     except Exception as e:
         print(e)
