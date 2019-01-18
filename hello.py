@@ -800,6 +800,6 @@ def genqrcode():
         return serve_pil_image(img)
     except Exception as e:
         f = open('delete_log.txt', mode='a+')
-        f.write(e)
+        f.write(str(e))
         f.close()
     return redirect('list_file')
