@@ -782,7 +782,7 @@ def search():
 
 def serve_pil_image(pil_img):
     img_io = io.BytesIO()
-    pil_img.save(img_io, 'JPEG', quality=70)
+    pil_img.save(img_io, 'JPEG', quality=95)
     img_io.seek(0)
     return send_file(img_io, mimetype='image/jpeg')
 
