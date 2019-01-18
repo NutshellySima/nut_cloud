@@ -5,7 +5,7 @@ import tempfile
 import weakref
 import tarfile
 import glob
-import io
+from tempfile import NamedTemporaryFile
 from flask import (
     Flask,
     render_template,
@@ -781,9 +781,9 @@ def search():
     return redirect('login')
 
 def serve_pil_image(pil_img):
-    img_io = io.BytesIO()
+    img_io = NamedTemporaryFile(mode='w+b',suffix='jpg')
     pil_img.save(img_io, 'JPEG', quality=95)
-    img_io.seek(0)
+    img_io.seek(0,0)
     return send_file(img_io, mimetype='image/jpeg')
 
 @app.route('/qrcode')
@@ -799,7 +799,5 @@ def genqrcode():
         img = qr.make_image()
         return serve_pil_image(img)
     except Exception as e:
-        f = open('delete_log.txt', mode='a+')
-        f.write(str(e))
-        f.close()
+        print(e)
     return redirect('list_file')
