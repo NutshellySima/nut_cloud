@@ -5,6 +5,7 @@ import tempfile
 import weakref
 import tarfile
 import glob
+import io
 from flask import (
     Flask,
     render_template,
@@ -14,6 +15,7 @@ from flask import (
     session,
     g,
     make_response,
+    Response,
 )
 from flask import abort
 from flask_sqlalchemy import SQLAlchemy
@@ -24,6 +26,7 @@ import string
 import random
 import base64
 from zxcvbn import zxcvbn
+import qrcode
 
 class FileRemover(object):
     def __init__(self):
@@ -776,3 +779,25 @@ def search():
     except Exception as e:
         print(e.args)
     return redirect('login')
+
+def serve_pil_image(pil_img):
+    img_io = io.BytesIO()
+    pil_img.save(img_io, 'JPEG', quality=70)
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/jpeg')
+
+@app.route('/qrcode')
+def genqrcode():
+    try:
+        if 'user' not in session:
+            return redirect('login')
+        qr = qrcode.QRCode(
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+        )
+        qr.add_data('https://www.lambdaof.xyz/s?link='+request.values['link'])
+        qr.make(fit=True)
+        img = qr.make_image()
+        return serve_pil_image(img)
+    except Exception as e:
+        print(e)
+    return redirect('list_file')

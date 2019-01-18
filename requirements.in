@@ -4,3 +4,5 @@ PyNaCl
 hurry.filesize
 uWSGI
 zxcvbn
+qrcode
+Pillow
