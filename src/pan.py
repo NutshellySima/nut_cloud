@@ -102,11 +102,12 @@ def list_file():
     def processFile(file):
         fileAbsPath=os.path.join(requestedPath, str(file))
         file_size=str(size(os.path.getsize(fileAbsPath)))
-        file_name=str(file)
+        name=file_name=str(file)
         split_file_name = os.path.splitext(fileAbsPath)
-        name=file_name[:len(split_file_name[0])]
-        ext=str(split_file_name[1][1:])
         is_dir=os.path.isdir(fileAbsPath)
+        if not is_dir:
+            name=file_name[:-len(split_file_name[1])]
+        ext=str(split_file_name[1][1:])
         return {
             'size':file_size,
             'name':name,
@@ -200,12 +201,13 @@ def search():
     dir_path=whichUser+"/"+os.path.relpath(requestedPath,makeUserDirAbsPath(whichUser))
     def processFile(file):
         fileAbsPath=os.path.abspath(file)
-        file_name=os.path.relpath(fileAbsPath,makeUserDirAbsPath(whichUser))
+        name=file_name=os.path.relpath(fileAbsPath,makeUserDirAbsPath(whichUser))
         file_size=str(size(os.path.getsize(fileAbsPath)))
         split_file_name = os.path.splitext(fileAbsPath)
-        name=file_name[:len(split_file_name[0])]
-        ext=str(split_file_name[1][1:])
         is_dir=os.path.isdir(fileAbsPath)
+        if not is_dir:
+            name=file_name[:-len(split_file_name[1])]
+        ext=str(split_file_name[1][1:])
         return {
             'size':file_size,
             'name':name,
