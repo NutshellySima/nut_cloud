@@ -136,8 +136,9 @@ def upload_file():
         return redirect(request.referrer)
     files = request.files.getlist("file")
     for file in files:
-        filename=secure_filename(file.filename)
-        path=os.path.join(requestedPath, filename)
+        path=os.path.join(requestedPath, file.filename)
+        if not isValidRequest(os.path.abspath(path),g.user['username']):
+            continue
         while os.path.exists(path) and os.path.isfile(path):
             split_file_name = os.path.splitext(path)
             path = split_file_name[0] + '-copy' + split_file_name[1]
