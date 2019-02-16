@@ -17,7 +17,6 @@ import weakref
 import glob
 import functools
 from hurry.filesize import size
-from werkzeug.utils import secure_filename
 
 bp = Blueprint('pan', __name__, url_prefix='/pan')
 basedir = os.path.abspath(os.path.dirname(__file__))
