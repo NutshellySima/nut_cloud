@@ -1,8 +1,5 @@
-import os
 import re
-import shutil
 import tempfile
-import weakref
 import tarfile
 import glob
 from tempfile import NamedTemporaryFile
@@ -28,116 +25,10 @@ import base64
 from zxcvbn import zxcvbn
 import qrcode
 
-class FileRemover(object):
-    def __init__(self):
-        self.weak_references = dict()  # weak_ref -> filepath to remove
-
-    def cleanup_once_done(self, response, filepath):
-        wr = weakref.ref(response, self._do_cleanup)
-        self.weak_references[wr] = filepath
-
-    def _do_cleanup(self, wr):
-        filepath = self.weak_references[wr]
-        print('Deleting %s' % filepath)
-        try:
-            shutil.rmtree(filepath)
-        except Exception as e:
-            f = open('delete_log.txt', mode='a+')
-            f.write(filepath)
-            f.close()
-
-file_remover = FileRemover()
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config.update(
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE='Strict',
-)
-try:
-    if os.environ['FLASK_ENV'] != 'development':
-        app.config.update(SESSION_COOKIE_SECURE=True,)
-except Exception:
-    app.config.update(SESSION_COOKIE_SECURE=True,)
-app.secret_key = b'a5g8o1.3;5]85f5n2l5[\'65g8n-2d5d42l5d5rt'
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-'sqlite:///'+os.path.join(basedir,'users.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-    user = db.Column(db.String(1024), primary_key=True)
-    pwd = db.Column(db.String(1024))
-    isAdmin=db.Column(db.Integer,nullable=False)
-
-    def __repr__(self):
-        return '<user %r>' % self.user
-
-
-class Invite_code(db.Model):
-    code = db.Column(db.String(16), primary_key=True)
-
-    def __repr__(self):
-        return '<user %r>' % self.code
-
-class Share_Info(db.Model):
-    link = db.Column(db.String(100), primary_key=True)
-    filename = db.Column(db.String(300), nullable=False)
-    username = db.Column(db.String(10), nullable=False)
-    passwd = db.Column(db.String(1024), nullable=True)
-    expiret = db.Column(db.DateTime, nullable=True)
-
-    def __repr__(self):
-        return '<Share_Info %r>' % self.link
-
-db.create_all()
-db.session.commit()
-
 def GetCspNonce():
   """Returns a random nonce."""
   NONCE_LENGTH = 16
   return base64.urlsafe_b64encode(os.urandom(NONCE_LENGTH))
-
-# Generate a secret nonce
-@app.before_request
-def gen_nonce():
-    g.nonce = GetCspNonce().decode('utf-8')
-
-# Add CSP to prevent XSS attacks
-@app.after_request
-def add_header(response):
-    if 'Content-Security-Policy' not in response.headers:
-        try:
-            # Production
-            if os.environ['FLASK_ENV'] != 'development':
-                response.headers['Content-Security-Policy'] = "upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"
-            # Development
-            else:
-                response.headers['Content-Security-Policy'] = "style-src 'nonce-"+g.nonce+"' http: https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' http: https:; object-src 'none'; base-uri 'none';"
-        # Production
-        except Exception:
-            response.headers['Content-Security-Policy'] = "upgrade-insecure-requests; block-all-mixed-content; style-src 'nonce-"+g.nonce+"' https:; script-src 'strict-dynamic' 'nonce-"+g.nonce+"' https:; object-src 'none'; base-uri 'none';"    
-    return response
-
-
-def generate_invite_code():
-    return GetCspNonce().decode('utf-8')
-
-
-@app.route('/')
-def index():
-    return redirect('/static/index.html')
-
-
-@app.route('/pan')
-@app.route('/nut_cloud')
-def nut_cloud():
-    if 'user' in session:
-        return redirect('list_file')
-    return redirect('login')
 
 
 @app.route('/upload_file', methods=['POST'])
@@ -381,15 +272,6 @@ def register():
                 ' failed.\n')
     f.close()
     return render_template('register_result.html',nonce=g.nonce),403
-
-
-@app.route('/logout', methods=['POST'])
-def logout():
-    session.clear()
-    r=make_response(redirect('login'))
-    # Try to remove all persistant XSS attacks.
-    r.headers.set('Clear-Site-Data', '"*"')
-    return r
 
 
 @app.route('/delete', methods=['POST'])
@@ -681,18 +563,6 @@ def tar():
     except Exception as e:
         pass
     return redirect('login')
-
-@app.route('/delete_log')
-def delete_log():
-    try:
-        if 'user' not in session:
-            return redirect('login')
-        record=User.query.filter_by(user=session['user']).first()
-        if record.isAdmin==1:
-            return send_file(os.path.abspath('./delete_log.txt'))
-    except Exception as e:
-        print(e)
-    return redirect('list_file')
 
 @app.route('/logs')
 def logs():
