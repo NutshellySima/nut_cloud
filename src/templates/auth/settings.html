@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Account Settings
+{% endblock %}
+
+{% block content %}
+{% if g.user['isadmin']==1 %}
+<form class="form-signin" method="POST" action="{{ url_for('auth.registerPan') }}">
+    <h1 class="text-center h3 mb-3 font-weight-normal">开通网盘</h1>
+    <input type="text" class="form-control" placeholder="用户名" required autofocus name='username'>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">开通</button>
+</form>
+<form class="form-signin" method="POST" action="{{ url_for('auth.registerAdmin') }}">
+    <h1 class="text-center h3 mb-3 font-weight-normal">任命管理员</h1>
+    <input type="text" class="form-control" placeholder="用户名" required autofocus name='username'>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">任命</button>
+</form>
+{% endif %}
+<h3 class="text-center h3 mb-3 font-weight-normal">账户日志</h3>
+<table class="table log">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">event</th>
+            <th scope="col">detail</th>
+            <th scope="col">Time</th>
+        </tr>
+    </thead>
+    {% for log in logs %}
+    <tbody>
+        <tr>
+            <th scope="row">{{log.title}}</th>
+            <td>{{log.body}}</td>
+            <td>{{log.created}}</td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -102,11 +102,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-login_log\.txt
-
-register_log\.txt
-delete_log\.txt
-
-users.sqlite
-run\.txt

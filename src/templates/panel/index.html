@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Panel
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">网盘</h5>
+                <p class="card-text">你的文件，都存放于此。</p>
+                <a href="/pan/" class="btn btn-primary">前往</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Online Shop</h5>
+                <p class="card-text">You can buy something here.</p>
+                <a href="/shop" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Account</h5>
+                <p class="card-text">账户设置</p>
+                <a href="/auth/settings" class="btn btn-primary">前往</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

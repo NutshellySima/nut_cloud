@@ -1,18 +1,22 @@
+{% block head %}
+<script src="{{ url_for('static', filename='drag_and_drop.js') }}"></script>
+{% endblock %}
 <div class="card border-light mb-3">
     <div class="card-header">
         <p class="card-text">当前目录: {{files.dir_path}}</p>
     </div>
     <div class="card-body text-info">
-        <h5 class="card-title"><a class="text-primary" href="/list_file?dir_path={{files.dir_path}}/..">返回上级目录</a></h5>
+        <h5 class="card-title"><a class="text-primary" href="{{ url_for('pan.list_file') }}?dir_path={{files.dir_path}}/.. ">返回上级目录</a></h5>
         <p class="card-text text-secondary">返回上级目录,在根目录时点击无效</p>
         <hr />
-        <h5 class="card-title"><a class="text-primary" href="/create_dir?dir_path={{files.dir_path}}">创建新文件夹</a></h5>
+        <h5 class="card-title"><a class="text-primary" href="{{ url_for('pan.create_dir') }}?dir_path={{files.dir_path}}">创建新文件夹</a></h5>
         <p class="card-text text-secondary">在此处创建一个新文件夹,点击后进入命名界面</p>
         <hr />
-        <h5 class="card-title"><a class="text-primary" href="/tar?dir_path={{files.dir_path}}">打包下载</a></h5>
+        <h5 class="card-title"><a class="text-primary" href="{{ url_for('pan.tar') }}?dir_path={{files.dir_path}}">打包下载</a></h5>
         <p class="card-text text-secondary">打包下载当前目录文件</p>
         <hr />
-        <form action='/upload_file' method="post" enctype='multipart/form-data' class="form-inline" id="sima-upload-form">
+        <form action="{{ url_for('pan.upload_file') }}" method="post" enctype='multipart/form-data' class="form-inline"
+            id="sima-upload-form">
             <input id="sima-magic" type="hidden" name='dir_path' value='{{files.dir_path}}' />
             <label class="btn btn-default text-primary no-padding">
                 <h5 class="card-title">
@@ -20,15 +24,9 @@
                 </h5>
                 <input type='file' name='file' id="sima-upload-file" multiple hidden />
             </label>
-            <input class="btn btn-outline-success smbut" type='submit' value='确认' hidden/>
-            <br/>
+            <input class="btn btn-outline-success smbut" type='submit' value='确认' hidden />
+            <br />
         </form>
         <p class="card-text text-secondary">上传文件到当前所在文件夹</p>
     </div>
 </div>
-<!--div class="card border-dark">
-    <div class="card-body">
-        <h5 class="card-title"><a class="text-dark" href="/create_dir?dir_path={{files.dir_path}}">分享文件</a></h5>
-        <p class="card-text">从当前文件夹选择文件分享给其他用户</p>
-    </div>
-</div-->

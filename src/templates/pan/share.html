@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+分享文件
+{% endblock %}
+
+{% block nav_left %}
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.index') }}">我的文件</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.shares') }}">我的分享</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.list_file', user='anyone') }}">共享文件夹</a></li>
+{% endblock %}
+
+{% block content %}
+{%if share_link%}
+<div class="text-center">
+    <p class="lead">分享的链接为</p>
+    <p class="lead">https://www.lambdaof.xyz/pan/s?link={{share_link}}</p>
+    <img width="100%" height="auto" src="{{ url_for('pan.genqrcode') }}?link={{share_link}}" />
+    <form class="form-signin" action="{{ url_for('pan.list_file') }}" method="GET">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">返回我的文件</button>
+    </form>
+</div>
+{%else%}
+<div class="container">
+    <div class="text-center">
+        <form class="form-signin" action="{{ url_for('pan.share') }}" method="POST">
+            <h1 class="text-center h3 mb-3 font-weight-normal">生成分享链接</h1>
+            <input type="text" value="{{path}}" name='filename' hidden>
+            <input type="number" class="form-control" placeholder="有效天数（选填）" autofocus name='time' value="" min="1">
+            <input type="text" class="form-control" placeholder="分享密码（选填）" name="password" value="">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">确定</button>
+        </form>
+    </div>
+</div>
+{%endif%}
+{% endblock %}

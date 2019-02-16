@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+创建文件夹
+{% endblock %}
+
+{% block nav_left %}
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.index') }}">我的文件</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.shares') }}">我的分享</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.list_file', user='anyone') }}">共享文件夹</a></li>
+{% endblock %}
+
+{% block content %}
+<form class="form-signin" action="{{ url_for('pan.create_dir') }}" method="POST">
+    <h1 class="h3 mb-3 font-weight-normal">输入文件夹名字</h1>
+    <input type="hidden" name="dir_path" value="{{dir_path}}" />
+    <input type="text" class="form-control" name='dir_name' placeholder="文件夹名字">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">创建</button>
+</form>
+{% endblock %}

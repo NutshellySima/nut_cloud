@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+分享
+{% endblock %}
+
+{% block nav_left %}
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.index') }}">我的文件</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.shares') }}">我的分享</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.list_file', user='anyone') }}">共享文件夹</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="have-margin card-columns">
+    {%for i in links%}
+    <div class="card border-dark">
+        <div class="card-header">{{i[0]}}</div>
+        <div class="card-body">
+            <h5 class="card-title"><a class="text-dark">{{i[1]}}</a></h5>
+            <p class="card-text">过期时间：{{i[2]}}</p>
+            <p class="card-text">有密码：{{i[3]}}</p>
+        </div>
+        <div class="card-footer">
+            <a class="btn btn-info" href="{{ url_for('pan.genqrcode') }}?link={{i[0]}}">二维码</a>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
+                取消分享
+            </button>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="I{{loop.index}}ModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="I{{loop.index}}ModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="I{{loop.index}}ModalCenterTitle">取消分享确认</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    你是否确认要取消分享{{i[1]}},链接为{{i[0]}}
+                </div>
+                <div class="modal-footer">
+                    <form action="{{ url_for('pan.delete_link') }}" method="post">
+                        <input type="hidden" name="link" value="{{i[0]}}" />
+                        <button class="btn btn-danger" type="submit">确认取消分享</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+
+</div>
+{% endblock %}

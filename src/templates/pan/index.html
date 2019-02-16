@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}
+文件
+{% endblock %}
+
+{% block nav_left %}
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.index') }}">我的文件</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.shares') }}">我的分享</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.list_file', dir_path='anyone') }}">共享文件夹</a></li>
+{% endblock %}
+
+{% block nav_right %}
+{% if files %}
+<form class="form-inline mt-2 mt-md-0" action="{{ url_for('pan.search') }}">
+    <input class="form-control mr-sm-2" type="text" placeholder="文件搜索" name="search_name" aria-label="Search">
+    <input type="hidden" name="dir_path" value="{{files.dir_path}}" />
+    <button class="btn btn-success my-2 my-sm-0" type="submit">搜索</button>
+</form>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="have-margin card-columns">
+    {%include 'pan/front_of_list_file.html'%}
+    {%for i in files.files%}
+    <div class="card border-dark">
+        {%if i.ext%}
+        <div class="card-header">{{i.ext}}</div>
+        {%endif%}
+        {%if i.is_dir%}
+        <div class="card-header dir-color">文件夹</div>
+        {%endif%}
+        <div class="card-body">
+            {%if i.is_dir%}
+            <h5 class="card-title"><a class="text-dark"
+                    href="{{ url_for('pan.list_file') }}?dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">{{i.name}}</a>
+            </h5>
+            {%else%}
+            <h5 class="card-title"><a class="text-dark"
+                    href="/pan/download/{{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}"
+                    download="{{i.filename}}">{{i.name}}</a></h5>
+            <p class="card-text">{{i.size}}</p>
+            {%endif%}
+        </div>
+        <div class="card-footer">
+            {%if i.is_dir%}
+            <a class="btn btn-secondary"
+                href="{{ url_for('pan.tar') }}?dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">打包下载</a>
+            {%else%}
+            <a class="btn btn-info"
+                href="share?user={{user}}&dir_path={{files.dir_path}}{%if files.dir_path%}/{%else%}{%endif%}{{i.filename}}">分享</a>
+            {%endif%}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#I{{loop.index}}ModalCenter">
+                删除
+            </button>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="I{{loop.index}}ModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="I{{loop.index}}ModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="I{{loop.index}}ModalCenterTitle">删除确认</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    你是否确认要删除{{i.filename}}{%if i.is_dir%}和里面的所有文件{%endif%}？
+                </div>
+                <div class="modal-footer">
+                    <form action="{{ url_for('pan.delete_file') }}" method="post">
+                        <input type="hidden" name="filename" value="{{i.filename}}" />
+                        <input type="hidden" name="dir_path" value="{{files.dir_path}}" />
+                        <button class="btn btn-danger" type="submit">确认删除</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+    <div class="card border-dark">
+        <div class="card-header text-info">拖拽上传</div>
+        <div class="card-body">
+            <div id="drop_zone">
+                <p>拖拽一个或多个文件到这个区域上传</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

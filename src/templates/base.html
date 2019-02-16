@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#007bff" />
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+    <title>{% block title %}{% endblock %}</title>
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-primary">
+        {% if g.user %}
+        <a class="navbar-brand" href="#">{{ g.user['username'] }}</a>
+        {% endif %}
+        <button class="navbar-toggler collapsed" role="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                {% if g.user %}
+                {% block nav_left %}
+                {% endblock %}
+                <li class="nav-item">
+                    <form class="nav-item" action="{{ url_for('auth.logout') }}" method="post">
+                        <button class="btn btn-link nav-link text-light" type="submit">注销</button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link text-light" href="{{ url_for('auth.register') }}">注册</a></li>
+                <li class="nav-item"><a class="nav-link text-light" href="{{ url_for('auth.login') }}">登录</a></li>
+                {% endif %}
+            </ul>
+            {% block nav_right %}
+            {% endblock %}
+        </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+    <footer class="footer">
+        {% block footer %}
+        {% endblock %}
+    </footer>
+</body>
+
+</html>

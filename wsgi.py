@@ -1,4 +1,4 @@
-from hello import app
+import src
 
 if __name__ == "__main__":
-    app.run()
+    src.create_app().run()
