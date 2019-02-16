@@ -295,7 +295,7 @@ def genqrcode():
     qr=qrcode.QRCode(
         error_correction=qrcode.constants.ERROR_CORRECT_H,
     )
-    qr.add_data('https://www.lambdaof.xyz/s?link='+request.values['link'])
+    qr.add_data('https://www.lambdaof.xyz/pan/s?link='+request.values['link'])
     qr.make(fit=True)
     img=qr.make_image()
     return serve_pil_image(img)
