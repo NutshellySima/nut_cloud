@@ -33,6 +33,9 @@ def create_app(test_config=None):
         os.makedirs("../upload_files/")
     except OSError:
         pass
+    
+    from . import shop
+    app.register_blueprint(shop.bp)
 
     from . import panel
     app.register_blueprint(panel.bp)
