@@ -173,3 +173,16 @@ def amendgood(idnum):
     )
     db.commit()
     return redirect(url_for('shop.index'))
+
+@bp.route('/deletegood/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+@shop_admin_required
+def deletegood(idnum):
+    db=get_db()
+    db.execute(
+        'DELETE FROM goods WHERE id = ?',
+        (idnum,)
+    )
+    db.commit()
+    return redirect(request.referrer)
