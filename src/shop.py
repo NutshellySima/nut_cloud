@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from src.auth import login_required
-from src.db import 
+from src.db import get_db
 import functools
 
 bp = Blueprint('shop', __name__, url_prefix='/shop')
