@@ -123,3 +123,30 @@ def detail(idnum):
     ).fetchone()
     html=markdown2.markdown(good['description'])
     return render_template('shop/detail.html',good=good,html=html)
+
+
+@bp.route('/amendgood/<int:idnum>',methods=['POST','GET'])
+@login_required
+@shop_required
+@shop_admin_required
+def amendgood(idnum):
+    if request.method=='GET':
+        db=get_db()
+        good=db.execute(
+            'SELECT * FROM goods WHERE id = ?',
+            (idnum,)
+        ).fetchone()
+        return render_template('shop/amendgood.html',good=good)
+    name=request.form.get("name")
+    value=request.form.get("value")
+    amount=request.form.get("amount")
+    gtype=request.form.get("type")
+    isOnsale=1 if request.form.get("isOnsale")=='on' else 0
+    description=request.form.get("description")
+    db=get_db()
+    db.execute(
+        'UPDATE goods SET name = ?, value = ?, amount = ?, type = ?, isOnsale = ?, description = ?',
+        (name, value, amount, gtype, isOnsale, description,)
+    )
+    db.commit()
+    return redirect(url_for('shop.index'))

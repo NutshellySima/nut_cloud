@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add good
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<form id="usrform" class="smtextbox" method="POST">
+    <h1 class="text-center h3 mb-3 font-weight-normal">修改商品</h1>
+    <div class="form-row">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="商品名称" required autofocus name='name' value="{{good['name']}}">
+        </div>
+        <div class="col">
+            <input type="number" class="form-control" placeholder="商品价格" required name='value' value="{{good['value']}}">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <input type="number" class="form-control" placeholder="商品总数（可选）" name='amount' value="{{good['amount']}}">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="商品类别" name='type' value="{{good['type']}}">
+        </div>
+    </div>
+    <div class="form-check form-check-inline">
+        <label for="isOnsale" class="form-check-label">上架</label>
+        {% if good['isOnsale'] == 1 %}
+        <input type="checkbox" class="form-check-input" placeholder="上架" name='isOnsale' id='isOnsale' checked>
+        {% else %}
+        <input type="checkbox" class="form-check-input" placeholder="上架" name='isOnsale' id='isOnsale'>
+        {% endif %}
+    </div>
+    <textarea name="description" id="description" form="usrform">
+        {{good['description']}}
+    </textarea>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">添加商品</button>
+</form>
+<script>
+    var simplemde = new SimpleMDE();
+</script>
+{% endblock %}
