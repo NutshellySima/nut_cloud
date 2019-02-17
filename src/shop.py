@@ -160,8 +160,8 @@ def amendgood(idnum):
     description=request.form.get("description")
     db=get_db()
     db.execute(
-        'UPDATE goods SET name = ?, value = ?, amount = ?, type = ?, isOnsale = ?, description = ?',
-        (name, value, amount, gtype, isOnsale, description,)
+        'UPDATE goods SET name = ?, value = ?, amount = ?, type = ?, isOnsale = ?, description = ? WHERE id = ?',
+        (name, value, amount, gtype, isOnsale, description,idnum,)
     )
     db.commit()
     return redirect(url_for('shop.index'))
