@@ -45,7 +45,11 @@ def shop_admin_required(view):
 
 @bp.route('/')
 def index():
-    return render_template('shop/index.html')
+    db=get_db()
+    goods=db.execute(
+        'SELECT id, name, value FROM goods where isOnsale=1'
+    ).fetchall()
+    return render_template('shop/index.html', goods=goods)
 
 @login_required
 @bp.route('/adduserinfo',methods=['POST','GET'])
@@ -76,7 +80,7 @@ def addgood():
     value=request.form.get("value")
     amount=request.form.get("amount")
     gtype=request.form.get("type")
-    isOnsale=True if request.form.get("isOnSale") else False
+    isOnsale=1 if request.form.get("isOnsale")=='on' else 0
     description=request.form.get("description")
     db=get_db()
     info=db.execute(
