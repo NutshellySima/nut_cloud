@@ -57,9 +57,18 @@ def addgood():
     isOnsale=True if request.form.get("isOnSale") else False
     description=request.form.get("description")
     db=get_db()
-    db.execute(
+    info=db.execute(
         'INSERT INTO goods (name, value, amount, type, isOnsale, description) VALUES (?, ?, ?, ?, ?, ?)',
         (name, value, amount, gtype, isOnsale, description,)
     )
     db.commit()
-    return render_template('shop/addgood.html')
+    return redirect(url_for('shop.addpic',id=info.lastrowid))
+
+@bp.route('/addpic',methods=['POST','GET'])
+@login_required
+@shop_required
+def addpic():
+    if request.method=='GET':
+        return render_template('shop/addpic.html')
+    
+    
