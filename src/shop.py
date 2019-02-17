@@ -6,9 +6,18 @@ from src.auth import login_required
 from src.db import get_db
 import functools
 import os
+import os, fnmatch
 
 bp = Blueprint('shop', __name__, url_prefix='/shop')
 basedir="../upload_files/anyone/shop"
+
+def find(pattern, path):
+    result = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if fnmatch.fnmatch(name, pattern):
+                result.append(os.path.join(root, name))
+    return result
 
 def shop_required(view):
     @functools.wraps(view)
@@ -94,5 +103,8 @@ def addpic():
         path=os.path.join(basedir, path)
         file.save(path)
     return redirect(url_for('shop.index'))
-    
-    
+
+@bp.route('/getpic/<int:id>')
+def getpic(id):
+    path=os.path.abspath(find(str(id)+'.*',basedir)[0])
+    return send_file(path, conditional=True)
