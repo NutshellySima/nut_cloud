@@ -5,8 +5,10 @@ from werkzeug.exceptions import abort
 from src.auth import login_required
 from src.db import get_db
 import functools
+import os
 
 bp = Blueprint('shop', __name__, url_prefix='/shop')
+basedir="../upload_files/anyone/shop"
 
 def shop_required(view):
     @functools.wraps(view)
@@ -18,6 +20,16 @@ def shop_required(view):
         if g.shopuser is None:
             flash("你尚未完善商店个人信息")
             return redirect(url_for('shop.adduserinfo'))
+        return view(**kwargs)
+
+    return wrapped_view
+
+def shop_admin_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.shopuser['isadmin'] == False:
+            flash("你不是管理员")
+            return redirect(url_for('index'))
         return view(**kwargs)
 
     return wrapped_view
@@ -47,6 +59,7 @@ def adduserinfo():
 @bp.route('/addgood',methods=['POST','GET'])
 @login_required
 @shop_required
+@shop_admin_required
 def addgood():
     if request.method=='GET':
         return render_template('shop/addgood.html')
@@ -67,8 +80,19 @@ def addgood():
 @bp.route('/addpic',methods=['POST','GET'])
 @login_required
 @shop_required
+@shop_admin_required
 def addpic():
     if request.method=='GET':
-        return render_template('shop/addpic.html')
+        return render_template('shop/addpic.html', id=request.values['id'])
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(request.referrer)
+    files = request.files.getlist("file")
+    for file in files:
+        split_file_name = os.path.splitext(file.filename)
+        path = str(request.form['id']) + split_file_name[1]
+        path=os.path.join(basedir, path)
+        file.save(path)
+    return redirect(url_for('shop.index'))
     
     

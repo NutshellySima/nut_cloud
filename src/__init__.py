@@ -36,6 +36,10 @@ def create_app(test_config=None):
     
     from . import shop
     app.register_blueprint(shop.bp)
+    try:
+        os.makedirs("../upload_files/anyone/shop")
+    except OSError:
+        pass
 
     from . import panel
     app.register_blueprint(panel.bp)

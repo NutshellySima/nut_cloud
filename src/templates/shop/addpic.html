@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add picture
+{% endblock %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='drag_and_drop.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="card border-light mb-3">
+    <div class="card-header">
+        <p class="card-text">上传物品{{id}}的图片</p>
+    </div>
+    <div class="card-body text-info">
+        <form method="post" enctype='multipart/form-data' class="form-inline"
+            id="sima-upload-form">
+            <input id="sima-magic" type="hidden" name='id' value='{{id}}' />
+            <label class="btn btn-default text-primary no-padding">
+                <h5 class="card-title">
+                    上传文件
+                </h5>
+                <input type='file' name='file' id="sima-upload-file" multiple hidden />
+            </label>
+            <input class="btn btn-outline-success smbut" type='submit' value='确认' hidden />
+            <br />
+        </form>
+        <p class="card-text text-secondary">上传图片</p>
+    </div>
+</div>
+{% endblock %}

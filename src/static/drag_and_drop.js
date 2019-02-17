@@ -69,7 +69,7 @@ function fileUploadHandler(ev){
 
 // Add event listeners
 document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('sima-upload-file').addEventListener('change',fileUploadHandler);
     document.getElementById('drop_zone').addEventListener('drop', dropHandler);
     document.getElementById('drop_zone').addEventListener('dragover', dragOverHandler);
-    document.getElementById('sima-upload-file').addEventListener('change',fileUploadHandler);
 });
