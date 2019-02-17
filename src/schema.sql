@@ -38,3 +38,18 @@ CREATE TABLE IF NOT EXISTS Share_Info(
     expiretime TIMESTAMP,
     FOREIGN KEY (userid) REFERENCES user (id)
 );
+
+/* shop */
+
+DROP TABLE IF EXISTS shopuser;
+
+CREATE TABLE SHOPUSER(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER UNIQUE NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT NOT NULL,
+    address TEXT NOT NULL,
+    isadmin INTEGER NOT NULL,
+    FOREIGN KEY (userid) REFERENCES user (id)
+);
+
