@@ -8,6 +8,10 @@ Add picture
 <script src="{{ url_for('static', filename='drag_and_drop.js') }}"></script>
 {% endblock %}
 
+{% block nav_left %}
+{% include 'shop/navleft.html' %}
+{% endblock %}
+
 {% block content %}
 <div class="card border-light mb-3">
     <div class="card-header">

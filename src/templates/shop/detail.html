@@ -8,6 +8,10 @@ Detail
 <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='sima.css')}}" />
 {% endblock %}
 
+{% block nav_left %}
+{% include 'shop/navleft.html' %}
+{% endblock %}
+
 {% block content %}
 <div class="panel">
     <div class="left-panel">
