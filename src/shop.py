@@ -7,6 +7,7 @@ from src.db import get_db
 import functools
 import os
 import os, fnmatch
+import markdown2
 
 bp = Blueprint('shop', __name__, url_prefix='/shop')
 basedir="../upload_files/anyone/shop"
@@ -108,7 +109,17 @@ def addpic():
         file.save(path)
     return redirect(url_for('shop.index'))
 
-@bp.route('/getpic/<int:id>')
-def getpic(id):
-    path=os.path.abspath(find(str(id)+'.*',basedir)[0])
+@bp.route('/getpic/<int:idnum>')
+def getpic(idnum):
+    path=os.path.abspath(find(str(idnum)+'.*',basedir)[0])
     return send_file(path, conditional=True)
+
+@bp.route('/detail/<int:idnum>')
+def detail(idnum):
+    db=get_db()
+    good=db.execute(
+        'SELECT * FROM goods WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    html=markdown2.markdown(good['description'])
+    return render_template('shop/detail.html',good=good,html=html)

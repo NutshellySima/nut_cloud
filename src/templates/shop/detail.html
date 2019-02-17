@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detail
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static',filename='sima.css')}}" />
+{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="left-panel">
+        <ul>
+            <li>
+                <h2>产品详情</h2>
+                <br/>
+                {{html|safe}}
+            </li>
+        </ul>
+    </div>
+    <div class="right-panel">
+        <div class="inside-panel">
+            <img src="/shop/getpic/{{good['id']}}" height="auto" class="avator" />
+            <br/>
+            <h2 class="name1"><strong>{{good['name']}}</strong></h2>
+            <p class="name2"><strong>{{good['value']}} 人民币</strong></p>
+            <p class="name2"><strong>商品类别：{{good['type']}}</strong></p>
+            <p class="name2"><strong>商品编号：{{good['id']}}</strong></p>
+            <p class="name2"><strong>商品库存：{{good['amount']}}</strong></p>
+            <p class="name2"><strong>上架状况：{{good['isOnsale']}}</strong></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
