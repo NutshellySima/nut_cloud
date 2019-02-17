@@ -49,6 +49,7 @@ CREATE TABLE SHOPUSER(
     phone TEXT NOT NULL,
     email TEXT NOT NULL,
     address TEXT NOT NULL,
+    postalcode INTEGER NOT NULL,
     isadmin INTEGER NOT NULL,
     FOREIGN KEY (userid) REFERENCES user (id)
 );

@@ -13,7 +13,7 @@
 {% block nav_right %}
 {% if files %}
 <form class="form-inline mt-2 mt-md-0" action="{{ url_for('pan.search') }}">
-    <input class="form-control mr-sm-2" type="text" placeholder="文件搜索" name="search_name" aria-label="Search">
+    <input class="form-control mr-sm-2" type="search" placeholder="文件搜索" name="search_name" aria-label="Search">
     <input type="hidden" name="dir_path" value="{{files.dir_path}}" />
     <button class="btn btn-success my-2 my-sm-0" type="submit">搜索</button>
 </form>

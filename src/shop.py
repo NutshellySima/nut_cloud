@@ -28,4 +28,4 @@ def index():
 
 @bp.route('/adduserinfo')
 def adduserinfo():
-    return render_template('shop/index.html')
+    return render_template('shop/adduserinfo.html')
