@@ -43,3 +43,23 @@ def adduserinfo():
     )
     db.commit()
     return redirect(url_for('shop.index'))
+
+@bp.route('/addgood',methods=['POST','GET'])
+@login_required
+@shop_required
+def addgood():
+    if request.method=='GET':
+        return render_template('shop/addgood.html')
+    name=request.form.get("name")
+    value=request.form.get("value")
+    amount=request.form.get("amount")
+    gtype=request.form.get("type")
+    isOnsale=True if request.form.get("isOnSale") else False
+    description=request.form.get("description")
+    db=get_db()
+    db.execute(
+        'INSERT INTO goods (name, value, amount, type, isOnsale, description) VALUES (?, ?, ?, ?, ?, ?)',
+        (name, value, amount, gtype, isOnsale, description,)
+    )
+    db.commit()
+    return render_template('shop/addgood.html')

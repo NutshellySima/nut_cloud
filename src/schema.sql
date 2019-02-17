@@ -61,7 +61,6 @@ CREATE TABLE GOODS(
     name TEXT NOT NULL,
     value INTEGER NOT NULL,
     type TEXT,
-    brand TEXT,
     description TEXT,
     amount INTEGER,
     isOnsale INTEGER NOT NULL
