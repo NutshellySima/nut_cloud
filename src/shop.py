@@ -26,6 +26,20 @@ def shop_required(view):
 def index():
     return render_template('shop/index.html')
 
-@bp.route('/adduserinfo')
+@login_required
+@bp.route('/adduserinfo',methods=['POST','GET'])
 def adduserinfo():
-    return render_template('shop/adduserinfo.html')
+    if request.method == 'GET':
+        return render_template('shop/userinfo.html')
+    isadmin=g.user['isadmin']
+    address=request.form['address']
+    postalcode=request.form['postalcode']
+    phone=request.form['phone']
+    email=request.form['email']
+    db=get_db()
+    db.execute(
+        'INSERT INTO shopuser (userid, phone, email, address, postalcode, isadmin) VALUES (?, ?, ?, ?, ?, ?)',
+        (g.user['id'],phone,email,address,postalcode,isadmin,)
+    )
+    db.commit()
+    return redirect(url_for('shop.index'))
