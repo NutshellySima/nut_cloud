@@ -24,6 +24,9 @@ Shop
         <div class="card-footer">
             <a class="btn btn-primary" href="/shop/buy/{{i['id']}}">购买</a>
             <a class="btn btn-secondary" href="/shop/detail/{{i['id']}}">详情</a>
+            {% if g.shopuser and g.shopuser['isadmin'] %}
+            <a class="btn btn-dark" href="/shop/amendgood/{{i['id']}}">修改</a>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
