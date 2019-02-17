@@ -205,3 +205,21 @@ def changeuserinfo():
     )
     db.commit()
     return redirect(url_for('shop.index'))
+
+@bp.route('/search',methods=['GET'])
+@pre_shop
+def search():
+    search_name=request.values.get('search_name')
+    db=get_db()
+    goods=None
+    if g.shopuser and g.shopuser['isadmin']==1:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods WHERE name LIKE ?',
+            ("%"+search_name+"%",)
+        ).fetchall()
+    else:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods where isOnsale=1 AND name LIKE ?',
+            ("%"+search_name+"%",)
+        ).fetchall()
+    return render_template('shop/index.html', goods=goods)

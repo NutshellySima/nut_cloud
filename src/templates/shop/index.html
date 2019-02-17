@@ -8,6 +8,13 @@ Shop
 {% include 'shop/navleft.html' %}
 {% endblock %}
 
+{% block nav_right %}
+<form class="form-inline mt-2 mt-md-0" action="{{ url_for('shop.search') }}">
+    <input class="form-control mr-sm-2" type="search" placeholder="商品搜索" name="search_name" aria-label="Search">
+    <button class="btn btn-success my-2 my-sm-0" type="submit">搜索</button>
+</form>
+{% endblock %}
+
 {% block content %}
 
 <style>
