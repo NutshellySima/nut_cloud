@@ -186,3 +186,22 @@ def deletegood(idnum):
     )
     db.commit()
     return redirect(request.referrer)
+
+@bp.route('/changeuserinfo',methods=['GET','POST'])
+@login_required
+@shop_required
+def changeuserinfo():
+    if request.method == 'GET':
+        return render_template('shop/userinfo.html',i=g.shopuser)
+    isadmin=g.user['isadmin']
+    address=request.form['address']
+    postalcode=request.form['postalcode']
+    phone=request.form['phone']
+    email=request.form['email']
+    db=get_db()
+    db.execute(
+        'UPDATE shopuser SET phone = ?, email = ?, address = ?, postalcode = ?, isadmin = ? WHERE userid = ?',
+        (phone,email,address,postalcode,isadmin,g.user['id'],)
+    )
+    db.commit()
+    return redirect(url_for('shop.index'))

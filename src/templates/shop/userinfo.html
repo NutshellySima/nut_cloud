@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Add user info
+user info
 {% endblock %}
 
 {% block nav_left %}
@@ -10,11 +10,11 @@ Add user info
 
 {% block content %}
 <form class="form-signin" method="POST">
-    <h1 class="text-center h3 mb-3 font-weight-normal">Add user info</h1>
-    <input type="text" class="form-control" placeholder="Address" required autofocus name='address'>
-    <input type="number" class="form-control" placeholder="Postal code" required name='postalcode'>
-    <input type="tel" class="form-control" placeholder="Phone Number" required name='phone'>
-    <input type="email" class="form-control" placeholder="Email" required name='email'>
+    <h1 class="text-center h3 mb-3 font-weight-normal">user info</h1>
+    <input type="text" class="form-control" placeholder="Address" required autofocus name='address' {% if i %}value="{{i['address']}}"{%endif%}>
+    <input type="number" class="form-control" placeholder="Postal code" required name='postalcode' {% if i %}value="{{i['postalcode']}}"{%endif%}>
+    <input type="tel" class="form-control" placeholder="Phone Number" required name='phone' {% if i %}value="{{i['phone']}}"{%endif%}>
+    <input type="email" class="form-control" placeholder="Email" required name='email' {% if i %}value="{{i['email']}}"{%endif%}>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Finish</button>
 </form>
 {% endblock %}
