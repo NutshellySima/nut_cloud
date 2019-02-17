@@ -54,3 +54,15 @@ CREATE TABLE IF NOT EXISTS SHOPUSER(
     FOREIGN KEY (userid) REFERENCES user (id)
 );
 
+DROP TABLE IF EXISTS goods;
+
+CREATE TABLE GOODS(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    value INTEGER NOT NULL,
+    type TEXT,
+    brand TEXT,
+    description TEXT,
+    amount INTEGER,
+    isOnsale INTEGER NOT NULL
+);
