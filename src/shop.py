@@ -28,6 +28,8 @@ def pre_shop(view):
                 'SELECT * FROM shopuser WHERE userid = ?',
                 (g.user['id'],)
             ).fetchone()
+        else:
+            g.shopuser=None
         return view(**kwargs)
 
     return wrapped_view
@@ -60,9 +62,15 @@ def shop_admin_required(view):
 @pre_shop
 def index():
     db=get_db()
-    goods=db.execute(
-        'SELECT id, name, value FROM goods where isOnsale=1'
-    ).fetchall()
+    goods=None
+    if g.shopuser and g.shopuser['isadmin']==1:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods'
+        ).fetchall()
+    else:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods where isOnsale=1'
+        ).fetchall()
     return render_template('shop/index.html', goods=goods)
 
 @login_required
