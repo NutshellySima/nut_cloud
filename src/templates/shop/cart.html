@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Cart
+{% endblock %}
+
+{% block nav_left %}
+{% include 'shop/navleft.html' %}
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .card-custom {
+        max-width: 256px;
+        min-width: 256px;
+    }
+</style>
+
+<div class="row smrow mt-5 justify-content-center">
+    {% for i in goods %}
+    <div class="card card-custom mx-2 mb-3">
+        <img src="/shop/getpic/{{i['id']}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{i['name']}}</h5>
+            <p class="card-text">{{i['value']}}人民币</p>
+        </div>
+        <div class="card-footer">
+            <form class="btn smrmpadding" action="/shop/buy/{{i['id']}}" method="post">
+                <button class="btn btn-primary" type="submit">购买</button>
+            </form>
+            <a class="btn btn-secondary" href="/shop/detail/{{i['id']}}">详情</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -236,3 +236,17 @@ def buy(idnum):
     db.commit()
     flash("商品已成功加入购物车")
     return redirect(request.referrer)
+
+@bp.route('/cart')
+@login_required
+@shop_required
+def cart():
+    db=get_db()
+    #FIXME: CHECK 原来购物车里有没有这玩意儿
+    goods=db.execute(
+        'SELECT cart.amount, goods.* FROM cart \
+        INNER JOIN goods ON goods.id = cart.goodid    \
+        WHERE cart.userid = ? AND cart.ticketid IS NULL',
+        (g.user['id'],)
+    ).fetchall()
+    return render_template('shop/cart.html',goods=goods)
