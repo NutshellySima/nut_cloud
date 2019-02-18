@@ -365,3 +365,21 @@ def tickets():
         info.append((ticket,goods))
     return render_template('shop/tickets.html',info=info)
 
+@bp.route('/cancelticket/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+def cancelticket(idnum):
+    db=get_db()
+    info=db.execute(
+        'SELECT status FROM ticket WHERE id = ? AND userid = ?',
+        (idnum,g.user['id'],)
+    ).fetchone()
+    if info['status'] != "pending":
+        flash("非法取消订单",category="error")
+        return redirect(request.referrer)
+    db.execute(
+        'UPDATE ticket SET status = ? WHERE id = ? AND userid = ?',
+        ("cancelled",idnum,g.user['id'],)
+    )
+    db.commit()
+    return redirect(request.referrer)
