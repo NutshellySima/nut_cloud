@@ -73,6 +73,7 @@ CREATE TABLE ticket(
     address TEXT NOT NULL,
     value INTEGER NOT NULL,
     userid INTEGER NOT NULL,
+    status INTEGER NOT NULL,
     FOREIGN KEY (userid) REFERENCES user (id)
 );
 
