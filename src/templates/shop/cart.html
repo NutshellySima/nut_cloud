@@ -18,18 +18,56 @@ Cart
 </style>
 
 <div class="row smrow mt-5 justify-content-center">
+    <div class="card card-custom mx-2 mb-3">
+        <div class="card-header">
+            <p class="card-text">购物车</p>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">
+                <a class="text-primary" href="#">查看更多商品</a>
+            </h5>
+            <p class="card-text text-secondary">买买买~</p>
+            <hr />
+            <h5 class="card-title">
+                <form action="#" method="post">
+                    <a class="text-primary smrmbutton" type="submit">清空购物车</a>
+                </form>
+            </h5>
+            <p class="card-text text-secondary">删除购物车中所有物品</p>
+            <hr />
+            <h5 class="card-title">
+                <form action="#" method="post">
+                    <a class="text-primary smrmbutton" type="submit">结算购物车</a>
+                </form>
+            </h5>
+            <p class="card-text text-secondary">结算购物车中所有物品</p>
+            <hr />
+            <h5 class="card-title">
+                <a class="text-dark" href="#">当前价格：</a>
+            </h5>
+            <p class="card-text text-secondary">购物车中所有物品的总价</p>
+            <hr />
+        </div>
+    </div>
     {% for i in goods %}
     <div class="card card-custom mx-2 mb-3">
         <img src="/shop/getpic/{{i['id']}}" class="card-img-top" alt="...">
         <div class="card-body">
-            <h5 class="card-title">{{i['name']}}</h5>
-            <p class="card-text">{{i['value']}}人民币</p>
+            <h5 class="card-title">{{i['name']}} x {{i['amount']}}</h5>
+            <p class="card-text">{{i['value']*i['amount']}}人民币</p>
         </div>
         <div class="card-footer">
-            <form class="btn smrmpadding" action="/shop/buy/{{i['id']}}" method="post">
-                <button class="btn btn-primary" type="submit">购买</button>
+            <div class="btn-group" role="group">
+                <form class="btn smrmpadding" action="/shop/minusone/{{i['id']}}" method="post">
+                    <button class="btn btn-primary" type="submit">-</button>
+                </form>
+                <form class="btn smrmpadding" action="/shop/buy/{{i['id']}}" method="post">
+                    <button class="btn btn-primary" type="submit">+</button>
+                </form>
+            </div>
+            <form class="btn smrmpadding" action="/shop/delete/{{i['id']}}" method="post">
+                <button class="btn btn-danger" type="submit">删除</button>
             </form>
-            <a class="btn btn-secondary" href="/shop/detail/{{i['id']}}">详情</a>
         </div>
     </div>
     {% endfor %}

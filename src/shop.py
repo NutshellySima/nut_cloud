@@ -229,12 +229,69 @@ def search():
 @shop_required
 def buy(idnum):
     db=get_db()
-    db.execute(
-        'INSERT INTO cart (goodid, amount, userid) VALUES (?, ?, ?)',
-        (idnum, 1, g.user['id'],)
-    )
+    info=db.execute(
+        'SELECT amount FROM cart WHERE goodid = ?',
+        (idnum,)
+    ).fetchone()
+    if info is None:
+        db.execute(
+            'INSERT INTO cart (goodid, amount, userid) VALUES (?, ?, ?)',
+            (idnum, 1, g.user['id'],)
+        )
+    else:
+        db.execute(
+            'UPDATE cart SET amount = ? WHERE goodid = ?',
+            (info['amount']+1,idnum,)
+        )
     db.commit()
     flash("商品已成功加入购物车")
+    return redirect(request.referrer)
+
+@bp.route('/minusone/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+def minusone(idnum):
+    db=get_db()
+    info=db.execute(
+        'SELECT amount FROM cart WHERE goodid = ?',
+        (idnum,)
+    ).fetchone()
+    if info is None:
+        flash("非法-1操作",category="error")
+        return redirect(request.referrer)
+    amount=info['amount']-1
+    if amount == 0:
+        db.execute(
+            'DELETE FROM cart WHERE goodid = ?',
+            (idnum,)
+        )
+    else:
+        db.execute(
+            'UPDATE cart SET amount = ? WHERE goodid = ?',
+            (amount,idnum,)
+        )
+    db.commit()
+    flash("商品已成功-1")
+    return redirect(request.referrer)
+
+@bp.route('/delete/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+def delete(idnum):
+    db=get_db()
+    info=db.execute(
+        'SELECT amount FROM cart WHERE goodid = ?',
+        (idnum,)
+    ).fetchone()
+    if info is None:
+        flash("非法删除操作",category="error")
+        return redirect(request.referrer)
+    db.execute(
+        'DELETE FROM cart WHERE goodid = ?',
+        (idnum,)
+    )
+    db.commit()
+    flash("商品已从购物车移除")
     return redirect(request.referrer)
 
 @bp.route('/cart')
@@ -242,7 +299,6 @@ def buy(idnum):
 @shop_required
 def cart():
     db=get_db()
-    #FIXME: CHECK 原来购物车里有没有这玩意儿
     goods=db.execute(
         'SELECT cart.amount, goods.* FROM cart \
         INNER JOIN goods ON goods.id = cart.goodid    \
