@@ -65,3 +65,25 @@ CREATE TABLE IF NOT EXISTS GOODS(
     amount INTEGER,
     isOnsale INTEGER NOT NULL
 );
+
+DROP TABLE IF EXISTS ticket;
+
+CREATE TABLE ticket(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    address TEXT NOT NULL,
+    value INTEGER NOT NULL,
+    userid INTEGER NOT NULL,
+    FOREIGN KEY (userid) REFERENCES user (id)
+);
+
+DROP TABLE IF EXISTS cart;
+
+CREATE TABLE cart(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticketid INTEGER,
+    goodid INTEGER NOT NULL,
+    amount INTEGER NOT NULL,
+    userid INTEGER NOT NULL,
+    FOREIGN KEY (userid) REFERENCES user (id)
+);
+
