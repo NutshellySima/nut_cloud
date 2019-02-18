@@ -352,3 +352,22 @@ def calccart():
     )
     db.commit()
     return redirect(request.referrer)
+
+@bp.route('/tickets')
+@login_required
+@shop_required
+def tickets():
+    db=get_db()
+    tickets=db.execute(
+        'SELECT * FROM ticket WHERE userid = ?',
+        (g.user['id'],)
+    ).fetchall()
+    info=[]
+    for ticket in tickets:
+        goods=db.execute(
+            'SELECT * FROM cart INNER JOIN goods ON cart.goodid=goods.id WHERE ticketid = ? AND userid = ?',
+            (ticket['id'],g.user['id'],)
+        ).fetchall()
+        info.append((ticket,goods))
+    return render_template('shop/tickets.html',info=info)
+

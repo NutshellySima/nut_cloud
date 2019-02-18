@@ -1,5 +1,6 @@
 <li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('shop.index') }}">主页</a></li>
 <li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('shop.cart') }}">购物车</a></li>
+<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('shop.tickets') }}">我的订单</a></li>
 <li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('shop.changeuserinfo') }}">更改账户信息</a></li>
 {% if g.shopuser and g.shopuser['isadmin']==1 %}
 <li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('shop.addgood') }}">添加商品</a></li>
