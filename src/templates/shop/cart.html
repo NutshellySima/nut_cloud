@@ -24,26 +24,26 @@ Cart
         </div>
         <div class="card-body">
             <h5 class="card-title">
-                <a class="text-primary" href="#">查看更多商品</a>
+                <a class="text-primary btn btn-light" href="{{url_for('shop.index')}}">查看更多商品</a>
             </h5>
             <p class="card-text text-secondary">买买买~</p>
             <hr />
             <h5 class="card-title">
-                <form action="#" method="post">
-                    <a class="text-primary smrmbutton" type="submit">清空购物车</a>
+                <form action="{{url_for('shop.emptycart')}}" method="post">
+                    <button class="text-primary btn btn-light" type="submit">清空购物车</button>
                 </form>
             </h5>
             <p class="card-text text-secondary">删除购物车中所有物品</p>
             <hr />
             <h5 class="card-title">
                 <form action="#" method="post">
-                    <a class="text-primary smrmbutton" type="submit">结算购物车</a>
+                    <button class="text-primary btn btn-light" type="submit">结算购物车</button>
                 </form>
             </h5>
             <p class="card-text text-secondary">结算购物车中所有物品</p>
             <hr />
             <h5 class="card-title">
-                <a class="text-dark" href="#">当前价格：</a>
+                <a class="text-dark">当前价格：人民币</a>
             </h5>
             <p class="card-text text-secondary">购物车中所有物品的总价</p>
             <hr />

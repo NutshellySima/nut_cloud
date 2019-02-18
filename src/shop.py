@@ -306,3 +306,15 @@ def cart():
         (g.user['id'],)
     ).fetchall()
     return render_template('shop/cart.html',goods=goods)
+
+@bp.route('/emptycart',methods=['POST'])
+@login_required
+@shop_required
+def emptycart():
+    db=get_db()
+    db.execute(
+        'DELETE FROM cart WHERE ticketid IS NULL AND userid = ?',
+        (g.user['id'],)
+    )
+    db.commit()
+    return redirect(request.referrer)
