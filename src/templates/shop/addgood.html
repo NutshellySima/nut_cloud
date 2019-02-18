@@ -26,7 +26,11 @@ Add good
             <input type="number" class="form-control" placeholder="商品总数（可选）" name='amount'>
         </div>
         <div class="col">
-            <input type="text" class="form-control" placeholder="商品类别" name='type'>
+            <select class="form-control" name='type' id="type">
+                {% for category in categories %}
+                <option>{{category['name']}}</option>
+                {% endfor %}
+            </select>
         </div>
     </div>
     <textarea name="description" id="description" form="usrform"></textarea>

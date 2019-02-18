@@ -92,7 +92,11 @@ def adduserinfo():
 @shop_admin_required
 def addgood():
     if request.method=='GET':
-        return render_template('shop/addgood.html')
+        db=get_db()
+        categories=db.execute(
+            'SELECT name FROM category'
+        ).fetchall()
+        return render_template('shop/addgood.html',categories=categories)
     name=request.form.get("name")
     value=request.form.get("value")
     amount=request.form.get("amount")
@@ -153,7 +157,11 @@ def amendgood(idnum):
             'SELECT * FROM goods WHERE id = ?',
             (idnum,)
         ).fetchone()
-        return render_template('shop/amendgood.html',good=good)
+        db=get_db()
+        categories=db.execute(
+            'SELECT name FROM category'
+        ).fetchall()
+        return render_template('shop/amendgood.html',good=good,categories=categories)
     name=request.form.get("name")
     value=request.form.get("value")
     amount=request.form.get("amount")
