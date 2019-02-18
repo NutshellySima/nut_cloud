@@ -63,14 +63,9 @@ def shop_admin_required(view):
 def index():
     db=get_db()
     goods=None
-    if g.shopuser and g.shopuser['isadmin']==1:
-        goods=db.execute(
-            'SELECT id, name, value FROM goods'
-        ).fetchall()
-    else:
-        goods=db.execute(
-            'SELECT id, name, value FROM goods where isOnsale=1'
-        ).fetchall()
+    goods=db.execute(
+        'SELECT id, name, value FROM goods where isOnsale=1'
+    ).fetchall()
     return render_template('shop/index.html', goods=goods)
 
 @login_required
@@ -102,12 +97,11 @@ def addgood():
     value=request.form.get("value")
     amount=request.form.get("amount")
     gtype=request.form.get("type")
-    isOnsale=1 if request.form.get("isOnsale")=='on' else 0
     description=request.form.get("description")
     db=get_db()
     info=db.execute(
         'INSERT INTO goods (name, value, amount, type, isOnsale, description) VALUES (?, ?, ?, ?, ?, ?)',
-        (name, value, amount, gtype, isOnsale, description,)
+        (name, value, amount, gtype, 1, description,)
     )
     db.commit()
     return redirect(url_for('shop.addpic',id=info.lastrowid))
@@ -181,7 +175,7 @@ def amendgood(idnum):
 def deletegood(idnum):
     db=get_db()
     db.execute(
-        'DELETE FROM goods WHERE id = ?',
+        'UPDATE goods SET isOnSale=0 WHERE id = ?',
         (idnum,)
     )
     db.commit()
