@@ -62,10 +62,17 @@ def shop_admin_required(view):
 @pre_shop
 def index():
     db=get_db()
+    category=request.values.get('category')
     goods=None
-    goods=db.execute(
-        'SELECT id, name, value FROM goods where isOnsale=1'
-    ).fetchall()
+    if category is None:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods where isOnsale=1'
+        ).fetchall()
+    else:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods where isOnsale=1 AND type = ?',
+            (category,)
+        ).fetchall()
     categories=db.execute(
         'SELECT name FROM category'
     ).fetchall()
@@ -215,12 +222,19 @@ def changeuserinfo():
 @pre_shop
 def search():
     search_name=request.values.get('search_name')
+    category=request.values.get('category')
     db=get_db()
     goods=None
-    goods=db.execute(
-        'SELECT id, name, value FROM goods where isOnsale=1 AND name LIKE ?',
-        ("%"+search_name+"%",)
-    ).fetchall()
+    if category is not None:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods where isOnsale=1 AND name LIKE ? AND type = ?',
+            ("%"+search_name+"%",category,)
+        ).fetchall()
+    else:
+        goods=db.execute(
+            'SELECT id, name, value FROM goods where isOnsale=1 AND name LIKE ?',
+            ("%"+search_name+"%",)
+        ).fetchall()
     categories=db.execute(
         'SELECT name FROM category'
     ).fetchall()
