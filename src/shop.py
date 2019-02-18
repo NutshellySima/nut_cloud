@@ -166,7 +166,7 @@ def amendgood(idnum):
         (name, value, amount, gtype, isOnsale, description,idnum,)
     )
     db.commit()
-    return redirect(url_for('shop.index'))
+    return redirect(url_for('shop.addpic',id=idnum))
 
 @bp.route('/deletegood/<int:idnum>',methods=['POST'])
 @login_required
