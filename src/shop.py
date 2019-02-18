@@ -305,7 +305,11 @@ def cart():
         WHERE cart.userid = ? AND cart.ticketid IS NULL',
         (g.user['id'],)
     ).fetchall()
-    return render_template('shop/cart.html',goods=goods)
+    amount=db.execute(
+        'SELECT SUM(amount*value) AS VALUE FROM (SELECT cart.amount, goods.* FROM cart INNER JOIN goods ON goods.id = cart.goodid WHERE cart.userid = ? AND cart.ticketid IS NULL)',
+        (g.user['id'],)
+    ).fetchone()['value']
+    return render_template('shop/cart.html',goods=goods,amount=amount)
 
 @bp.route('/emptycart',methods=['POST'])
 @login_required
