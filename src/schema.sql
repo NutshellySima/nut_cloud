@@ -74,7 +74,7 @@ CREATE TABLE ticket(
     value INTEGER NOT NULL,
     userid INTEGER NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status INTEGER NOT NULL,
+    status TEXT NOT NULL,
     FOREIGN KEY (userid) REFERENCES user (id)
 );
 
