@@ -50,7 +50,7 @@ def pan_required(view):
             (g.user['id'],)
         ).fetchone()
         if g.panuser is None:
-            flash("你没有网盘访问权限")
+            flash("你没有网盘访问权限",category="error")
             return redirect(url_for('index'))
         try:
             os.makedirs(os.path.join("../upload_files/", g.user['username']))
@@ -132,7 +132,7 @@ def upload_file():
     if not isValidRequest(requestedPath,g.user['username']):
         return redirect(request.referrer)
     if 'file' not in request.files:
-        flash('No file part')
+        flash('No file part',category="error")
         return redirect(request.referrer)
     files = request.files.getlist("file")
     for file in files:
@@ -245,7 +245,7 @@ def delete_file():
     elif not os.path.exists(file_path):
         error="文件不存在"
     if error is not None:
-        flash(error)
+        flash(error,category="error")
         return redirect(url_for('pan.list_file',dir_path=dir_path))
     db=get_db()
     if os.path.isfile(file_path):
@@ -332,7 +332,7 @@ def share():
     if not isValidRequest(file_path,g.user['username']):
         error="正在分享非法文件"
     if error is not None:
-        flash(error)
+        flash(error,category="error")
         return redirect(request.referrer)
     shareLink=generateRandomCode()
     db=get_db()
@@ -368,7 +368,7 @@ def delete_link():
         (request.values['link'],)
     ).fetchone()
     if info['userid']!=g.user['id']:
-        flash("非法操作")
+        flash("非法操作",category="error")
         return redirect(request.referrer)
     db.execute(
         'DELETE FROM share_info WHERE link = ?',
@@ -387,7 +387,7 @@ def s():
     if info is None:
         abort(404)
     if info['expiretime'] is not None and datetime.datetime.utcnow()>info['expiretime']:
-        flash("分享链接已过期")
+        flash("分享链接已过期",category="error")
         return redirect(url_for('index'))
     if info['password'] is not None:
         return render_template('pan/safeshare.html', link=request.values['link'])
@@ -403,10 +403,10 @@ def safes():
     if info is None:
         abort(404)
     if info['expiretime'] is not None and datetime.datetime.utcnow()>info['expiretime']:
-        flash("分享链接已过期")
+        flash("分享链接已过期",category="error")
         return redirect(url_for('index'))
     if info['password'] is None:
-        flash("该文件无密码")
+        flash("该文件无密码",category="error")
         return redirect(url_for('index'))
     try:
         nacl.pwhash.verify(info['password'],str(request.form['password']).encode('utf-8'))

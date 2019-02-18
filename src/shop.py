@@ -42,7 +42,7 @@ def shop_required(view):
             (g.user['id'],)
         ).fetchone()
         if g.shopuser is None:
-            flash("你尚未完善商店个人信息")
+            flash("你尚未完善商店个人信息",category="error")
             return redirect(url_for('shop.adduserinfo'))
         return view(**kwargs)
 
@@ -52,7 +52,7 @@ def shop_admin_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.shopuser['isadmin'] == False:
-            flash("你不是管理员")
+            flash("你不是管理员",category="error")
             return redirect(url_for('index'))
         return view(**kwargs)
 
@@ -120,7 +120,7 @@ def addpic():
     if request.method=='GET':
         return render_template('shop/addpic.html', id=request.values['id'])
     if 'file' not in request.files:
-        flash('No file part')
+        flash('No file part',category="error")
         return redirect(request.referrer)
     files = request.files.getlist("file")
     for file in files:
@@ -223,3 +223,16 @@ def search():
             ("%"+search_name+"%",)
         ).fetchall()
     return render_template('shop/index.html', goods=goods)
+
+@bp.route('/buy/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+def buy(idnum):
+    db=get_db()
+    db.execute(
+        'INSERT INTO cart (goodid, amount, userid) VALUES (?, ?, ?)',
+        (idnum, 1, g.user['id'],)
+    )
+    db.commit()
+    flash("商品已成功加入购物车")
+    return redirect(request.referrer)

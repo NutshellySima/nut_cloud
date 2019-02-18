@@ -33,7 +33,9 @@ Shop
             <p class="card-text">{{i['value']}}人民币</p>
         </div>
         <div class="card-footer">
-            <a class="btn btn-primary" href="/shop/buy/{{i['id']}}">购买</a>
+            <form class="btn smrmpadding" action="/shop/buy/{{i['id']}}" method="post">
+                <button class="btn btn-primary" type="submit">购买</button>
+            </form>
             <a class="btn btn-secondary" href="/shop/detail/{{i['id']}}">详情</a>
         </div>
         {% if g.shopuser and g.shopuser['isadmin'] %}

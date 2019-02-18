@@ -47,7 +47,7 @@ def register():
             db.commit()
             return redirect(url_for('auth.login'))
         
-        flash(error)
+        flash(error,category="error")
 
     return render_template('auth/register.html')
 
@@ -86,7 +86,7 @@ def login():
             db.commit()
             return redirect(url_for('index'))
         
-        flash(error)
+        flash(error,category="error")
     
     return render_template('auth/login.html')
 
@@ -106,7 +106,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            flash("您尚未登陆")
+            flash("您尚未登陆",category="error")
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
@@ -180,7 +180,7 @@ def registerPan():
         ).fetchone()
         if currentUser is not None:
             error='User {} is already granted disk access.'.format(user['username'])
-            flash(error)
+            flash(error,category="error")
             return redirect(url_for('auth.settings'))
         db.execute(
             'INSERT INTO panuser (userid) VALUES (?)',
