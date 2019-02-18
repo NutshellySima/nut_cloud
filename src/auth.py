@@ -72,7 +72,7 @@ def login():
                 error = 'Incorrect password.'
                 db.execute(
                     'INSERT INTO logs (userid, title, body) VALUES (?, ?, ?)',
-                    (g.user['id'], "auth.login.failed", "Somebody failed to login your account.")
+                    (user['id'], "auth.login.failed", "Somebody failed to login your account.")
                 )
                 db.commit()
         
