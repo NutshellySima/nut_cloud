@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Cart
+{% endblock %}
+
+{% block nav_left %}
+{% include 'shop/navleft.html' %}
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .card-custom {
+        max-width: 300px;
+        min-width: 300px;
+    }
+</style>
+
+<div class="row smrow mt-5 justify-content-center">
+    {% for i in info %}
+    <div class="card card-custom mx-2 mb-3">
+        <div class="card-header">{{i[0]['created']}}</div>
+        <div class="card-body">
+            <h5 class="card-title">第 {{loop.index}} 单</h5>
+            <p class="card-text">用户名：{{i[0]['username']}}</p>
+            <p class="card-text">手机号：{{i[0]['phone']}}</p>
+            <p class="card-text">Email：{{i[0]['email']}}</p>
+            <p class="card-text">地址：{{i[0]['address']}}</p>
+            <p class="card-text">邮政编码：{{i[0]['postalcode']}}</p>
+            <hr />
+            <p class="card-text">金额：{{i[0]['value']}} 人民币</p>
+            <p class="card-text">订单状态：{{i[0]['status']}}</p>
+            <hr />
+            <h5 class="card-title">详单</h5>
+            {% for item in i[1] %}
+            <p class="card-text"><a class="text-dark" href="/shop/detail/{{item['goodid']}}">{{item['name']}}</a> x {{item['amount']}}</p>
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            <form class="btn smrmpadding" action="/shop/finishticket/{{i[0]['id']}}" method="post">
+                {% if i[0]['status'] == "pending" %}
+                <button class="btn btn-success" type="submit">完成订单</button>
+                {% else %}
+                <button class="btn btn-success" type="submit" disabled>完成订单</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

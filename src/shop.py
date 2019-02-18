@@ -383,3 +383,42 @@ def cancelticket(idnum):
     )
     db.commit()
     return redirect(request.referrer)
+
+@bp.route('/finishticket/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+@shop_admin_required
+def finishticket(idnum):
+    db=get_db()
+    info=db.execute(
+        'SELECT status FROM ticket WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    if info['status'] != "pending":
+        flash("非法完成订单",category="error")
+        return redirect(request.referrer)
+    db.execute(
+        'UPDATE ticket SET status = ? WHERE id = ?',
+        ("finished",idnum,)
+    )
+    db.commit()
+    return redirect(request.referrer)
+
+@bp.route('/configtickets')
+@login_required
+@shop_required
+@shop_admin_required
+def configtickets():
+    db=get_db()
+    tickets=db.execute(
+        'SELECT ticket.id,ticket.address,value,created,status,phone,email,postalcode,username \
+        FROM ticket INNER JOIN shopuser ON ticket.userid=shopuser.userid INNER JOIN USER ON shopuser.userid=user.id'
+    ).fetchall()
+    info=[]
+    for ticket in tickets:
+        goods=db.execute(
+            'SELECT * FROM cart INNER JOIN goods ON cart.goodid=goods.id WHERE ticketid = ?',
+            (ticket['id'],)
+        ).fetchall()
+        info.append((ticket,goods))
+    return render_template('shop/configtickets.html',info=info)
