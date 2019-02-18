@@ -118,3 +118,7 @@ body {
     margin: auto;
     max-width: 80%;
   }
+  .smrow{
+    margin-right: 0px;
+    margin-left: 0px;
+  }
