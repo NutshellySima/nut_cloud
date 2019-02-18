@@ -37,9 +37,7 @@ Amend good
         <input type="checkbox" class="form-check-input" placeholder="上架" name='isOnsale' id='isOnsale'>
         {% endif %}
     </div>
-    <textarea name="description" id="description" form="usrform">
-        {{good['description']}}
-    </textarea>
+    <textarea name="description" id="description" form="usrform">{{good['description']}}</textarea>
     <button class="btn btn-lg btn-primary btn-block" type="submit">修改商品</button>
 </form>
 <script>
