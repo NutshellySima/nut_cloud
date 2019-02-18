@@ -29,7 +29,7 @@ Cart
             <hr />
             <h5 class="card-title">详单</h5>
             {% for item in i[1] %}
-            <p class="card-text">{{item['name']}} x {{item['amount']}}</p>
+            <p class="card-text"><a class="text-dark" href="/shop/detail/{{item['goodid']}}">{{item['name']}}</a> x {{item['amount']}}</p>
             {% endfor %}
         </div>
         <div class="card-footer">
