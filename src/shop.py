@@ -422,3 +422,84 @@ def configtickets():
         ).fetchall()
         info.append((ticket,goods))
     return render_template('shop/configtickets.html',info=info)
+
+
+@bp.route('/createcategory',methods=['GET','POST'])
+@login_required
+@shop_required
+@shop_admin_required
+def createcategory():
+    if request.method=='GET':
+        return render_template('shop/createcategory.html')
+    name=request.form['name']
+    db=get_db()
+    info=db.execute(
+        'SELECT * FROM category WHERE name = ?',
+        (name,)
+    ).fetchone()
+    if info is not None:
+        flash("已存在此类别",category="error")
+        return redirect(request.referrer)
+    db.execute(
+        'INSERT INTO category (name) VALUES (?)',
+        (name,)
+    )
+    db.commit()
+    flash("已成功创建类别")
+    return redirect(url_for("shop.index"))
+
+@bp.route('/categories')
+@login_required
+@shop_required
+@shop_admin_required
+def categories():
+    db=get_db()
+    info=db.execute(
+        'SELECT * FROM category'
+    ).fetchall()
+    return render_template("shop/categories.html",info=info)
+
+@bp.route('/renamecategory/<int:idnum>',methods=['GET','POST'])
+@login_required
+@shop_required
+@shop_admin_required
+def renamecategory(idnum):
+    if request.method=='GET':
+        return render_template("shop/createcategory.html")
+    name=request.form['name']
+    db=get_db()
+    oldname=db.execute(
+        'SELECT name FROM category WHERE id = ?',
+        (idnum,)
+    ).fetchone()['name']
+    db.execute(
+        'UPDATE category SET name = ? WHERE id = ?',
+        (name, idnum,)
+    )
+    db.execute(
+        'UPDATE goods SET type = ? WHERE type = ?',
+        (name,oldname,)
+    )
+    db.commit()
+    return redirect(url_for("shop.categories"))
+
+@bp.route('/deletecategory/<int:idnum>',methods=['POST'])
+@login_required
+@shop_required
+@shop_admin_required
+def deletecategory(idnum):
+    db=get_db()
+    oldname=db.execute(
+        'SELECT name FROM category WHERE id = ?',
+        (idnum,)
+    ).fetchone()['name']
+    db.execute(
+        'DELETE FROM category WHERE id = ?',
+        (idnum,)
+    )
+    db.execute(
+        'UPDATE goods SET type = NULL WHERE type = ?',
+        (oldname,)
+    )
+    db.commit()
+    return redirect(url_for("shop.categories"))

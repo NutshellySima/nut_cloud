@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Categories
+{% endblock %}
+
+{% block nav_left %}
+{% include 'shop/navleft.html' %}
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .card-custom {
+        max-width: 256px;
+        min-width: 256px;
+    }
+</style>
+
+<div class="row smrow mt-5 justify-content-center">
+    <div class="card card-custom mx-2 mb-3">
+        <div class="card-header">
+            <p class="card-text">类别</p>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">
+                <form action="{{url_for('shop.createcategory')}}" method="GET">
+                    <button class="text-primary btn btn-light" type="submit">新增分类</button>
+                </form>
+            </h5>
+            <p class="card-text text-secondary">新增一个分类</p>
+        </div>
+    </div>
+    {% for i in info %}
+    <div class="card card-custom mx-2 mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{i['name']}}</h5>
+        </div>
+        <div class="card-footer">
+            <form class="btn smrmpadding" action="/shop/renamecategory/{{i['id']}}" method="GET">
+                <button class="btn btn-warning" type="submit">重命名</button>
+            </form>
+            <form class="btn smrmpadding" action="/shop/deletecategory/{{i['id']}}" method="post">
+                <button class="btn btn-danger" type="submit">删除</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
