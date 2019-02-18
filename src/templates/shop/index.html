@@ -19,14 +19,20 @@ Shop
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link" href="{{url_for('shop.index')}}">全部分类</a>
+            {%if search==False %}
+            <a class="nav-link" href="/shop/">全部分类</a>
+            {% else %}
+            <a class="nav-link"
+                href="/shop/search?search_name={{search_name}}">全部分类</a>
+            {% endif %}
         </li>
         {%for category in categories%}
         <li class="nav-item">
             {%if search==False %}
             <a class="nav-link" href="/shop/?category={{category['name']}}">{{category['name']}}</a>
             {% else %}
-            <a class="nav-link" href="/shop/search?search_name={{search_name}}&category={{category['name']}}">{{category['name']}}</a>
+            <a class="nav-link"
+                href="/shop/search?search_name={{search_name}}&category={{category['name']}}">{{category['name']}}</a>
             {% endif %}
         </li>
         {%endfor%}
