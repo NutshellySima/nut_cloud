@@ -230,7 +230,7 @@ def search():
 def buy(idnum):
     db=get_db()
     info=db.execute(
-        'SELECT amount FROM cart WHERE goodid = ?',
+        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
         (idnum,)
     ).fetchone()
     if info is None:
@@ -240,7 +240,7 @@ def buy(idnum):
         )
     else:
         db.execute(
-            'UPDATE cart SET amount = ? WHERE goodid = ?',
+            'UPDATE cart SET amount = ? WHERE goodid = ? AND ticketid IS NULL',
             (info['amount']+1,idnum,)
         )
     db.commit()
@@ -253,7 +253,7 @@ def buy(idnum):
 def minusone(idnum):
     db=get_db()
     info=db.execute(
-        'SELECT amount FROM cart WHERE goodid = ?',
+        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
         (idnum,)
     ).fetchone()
     if info is None:
@@ -262,12 +262,12 @@ def minusone(idnum):
     amount=info['amount']-1
     if amount == 0:
         db.execute(
-            'DELETE FROM cart WHERE goodid = ?',
+            'DELETE FROM cart WHERE goodid = ? AND ticketid IS NULL',
             (idnum,)
         )
     else:
         db.execute(
-            'UPDATE cart SET amount = ? WHERE goodid = ?',
+            'UPDATE cart SET amount = ? WHERE goodid = ? AND ticketid IS NULL',
             (amount,idnum,)
         )
     db.commit()
@@ -280,14 +280,14 @@ def minusone(idnum):
 def delete(idnum):
     db=get_db()
     info=db.execute(
-        'SELECT amount FROM cart WHERE goodid = ?',
+        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
         (idnum,)
     ).fetchone()
     if info is None:
         flash("非法删除操作",category="error")
         return redirect(request.referrer)
     db.execute(
-        'DELETE FROM cart WHERE goodid = ?',
+        'DELETE FROM cart WHERE goodid = ? AND ticketid IS NULL',
         (idnum,)
     )
     db.commit()
