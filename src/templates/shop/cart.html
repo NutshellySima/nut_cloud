@@ -43,7 +43,7 @@ Cart
             <p class="card-text text-secondary">结算购物车中所有物品</p>
             <hr />
             <h5 class="card-title">
-                <a class="text-dark">价格：{{amount}} 人民币</a>
+                <a class="text-dark">价格：{% if amount %}{{amount}}{%else%}0{%endif%} 人民币</a>
             </h5>
             <p class="card-text text-secondary">购物车中所有物品的总价</p>
             <hr />
