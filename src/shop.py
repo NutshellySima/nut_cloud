@@ -337,8 +337,8 @@ def calccart():
         (g.user['id'],)
     ).fetchone()['value']
     info=db.execute(
-        'INSERT INTO ticket (address, value, userid, status) VALUES (?, ?, ?, ?)',
-        (g.shopuser['address'], amount, g.user['id'],"pending",)
+        'INSERT INTO ticket (address, postalcode, value, userid, status) VALUES (?, ?, ?, ?, ?)',
+        (g.shopuser['address'], g.shopuser['postalcode'], amount, g.user['id'],"pending",)
     )
     db.execute(
         'UPDATE cart SET ticketid = ? WHERE userid = ? AND ticketid IS NULL',
@@ -411,7 +411,7 @@ def finishticket(idnum):
 def configtickets():
     db=get_db()
     tickets=db.execute(
-        'SELECT ticket.id,ticket.address,value,created,status,phone,email,postalcode,username \
+        'SELECT ticket.id,ticket.address,value,created,status,phone,email,ticket.postalcode,username \
         FROM ticket INNER JOIN shopuser ON ticket.userid=shopuser.userid INNER JOIN USER ON shopuser.userid=user.id'
     ).fetchall()
     info=[]
