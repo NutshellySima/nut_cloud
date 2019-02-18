@@ -322,3 +322,33 @@ def emptycart():
     )
     db.commit()
     return redirect(request.referrer)
+
+
+@bp.route('/calccart',methods=['POST'])
+@login_required
+@shop_required
+def calccart():
+    db=get_db()
+    goods=db.execute(
+        'SELECT cart.amount, goods.* FROM cart \
+        INNER JOIN goods ON goods.id = cart.goodid    \
+        WHERE cart.userid = ? AND cart.ticketid IS NULL',
+        (g.user['id'],)
+    ).fetchall()
+    if goods == []:
+        flash("你的购物车是空的",category="error")
+        return redirect(request.referrer)
+    amount=db.execute(
+        'SELECT SUM(amount*value) AS VALUE FROM (SELECT cart.amount, goods.* FROM cart INNER JOIN goods ON goods.id = cart.goodid WHERE cart.userid = ? AND cart.ticketid IS NULL)',
+        (g.user['id'],)
+    ).fetchone()['value']
+    info=db.execute(
+        'INSERT INTO ticket (address, value, userid, status) VALUES (?, ?, ?, ?)',
+        (g.shopuser['address'], amount, g.user['id'],"pending",)
+    )
+    db.execute(
+        'UPDATE cart SET ticketid = ? WHERE userid = ? AND ticketid IS NULL',
+        (info.lastrowid, g.user['id'],)
+    )
+    db.commit()
+    return redirect(request.referrer)
