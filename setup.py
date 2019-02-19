@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='nut_cloud-NutshellySima',
+    name='nut_cloud',
     version='19.02.19',
     author="Chijun Sima",
     author_email="simachijun@gmail.com",
