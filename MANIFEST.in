@@ -1,0 +1,4 @@
+include nut_cloud/schema.sql
+graft nut_cloud/static
+graft nut_cloud/templates
+global-exclude *.pyc
