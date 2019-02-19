@@ -35,14 +35,6 @@ Amend good
             </select>
         </div>
     </div>
-    <div class="form-check form-check-inline">
-        <label for="isOnsale" class="form-check-label">上架</label>
-        {% if good['isOnsale'] == 1 %}
-        <input type="checkbox" class="form-check-input" placeholder="上架" name='isOnsale' id='isOnsale' checked>
-        {% else %}
-        <input type="checkbox" class="form-check-input" placeholder="上架" name='isOnsale' id='isOnsale'>
-        {% endif %}
-    </div>
     <textarea name="description" id="description" form="usrform">{{good['description']}}</textarea>
     <button class="btn btn-lg btn-primary btn-block" type="submit">修改商品</button>
 </form>
