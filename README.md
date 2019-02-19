@@ -7,6 +7,10 @@ This package uses flask to create a simple website which uses sqlite3 as the bac
 1. Shop
 2. Cloud drive
 
+## CAUTION
+
+You need to configure the app_secret_key yourself!
+
 ## Language
 
 Simplified Chinese
