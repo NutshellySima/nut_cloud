@@ -200,15 +200,14 @@ def deletegood(idnum):
 def changeuserinfo():
     if request.method == 'GET':
         return render_template('shop/userinfo.html',i=g.shopuser)
-    isadmin=g.user['isadmin']
-    address=request.form['address']
-    postalcode=request.form['postalcode']
-    phone=request.form['phone']
-    email=request.form['email']
+    address=request.form.get('address')
+    postalcode=request.form.get('postalcode')
+    phone=request.form.get('phone')
+    email=request.form.get('email')
     db=get_db()
     db.execute(
-        'UPDATE shopuser SET phone = ?, email = ?, address = ?, postalcode = ?, isadmin = ? WHERE userid = ?',
-        (phone,email,address,postalcode,isadmin,g.user['id'],)
+        'UPDATE shopuser SET phone = ?, email = ?, address = ?, postalcode = ? WHERE userid = ?',
+        (phone,email,address,postalcode,g.user['id'],)
     )
     db.commit()
     return redirect(url_for('shop.index'))
