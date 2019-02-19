@@ -128,8 +128,11 @@ def addpic():
 
 @bp.route('/getpic/<int:idnum>')
 def getpic(idnum):
-    path=os.path.abspath(find(str(idnum)+'.*',basedir)[0])
-    return send_file(path, conditional=True)
+    try:
+        path=os.path.abspath(find(str(idnum)+'.*',basedir)[0])
+        return send_file(path, conditional=True)
+    except IndexError:
+        return 'Error',404
 
 @bp.route('/detail/<int:idnum>')
 def detail(idnum):
@@ -138,6 +141,9 @@ def detail(idnum):
         'SELECT * FROM goods WHERE id = ?',
         (idnum,)
     ).fetchone()
+    if good is None:
+        flash("不存在该商品")
+        return redirect(url_for("shop.index"))
     html=markdown2.markdown(good['description'])
     return render_template('shop/detail.html',good=good,html=html)
 
@@ -152,7 +158,7 @@ def amendgood(idnum):
     ).fetchone()
     if good is None:
         flash("不存在该商品")
-        redirect(url_for("shop.index"))
+        return redirect(url_for("shop.index"))
     if request.method=='GET':
         categories=db.execute(
             'SELECT name FROM category'
