@@ -448,7 +448,7 @@ def configtickets():
 def createcategory():
     if request.method=='GET':
         return render_template('shop/createcategory.html')
-    name=request.form['name']
+    name=request.form.get('name')
     db=get_db()
     info=db.execute(
         'SELECT * FROM category WHERE name = ?',
