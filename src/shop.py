@@ -359,8 +359,30 @@ def calccart():
     if goods == []:
         flash("你的购物车是空的",category="error")
         return redirect(request.referrer)
+    existedgoods=db.execute(
+        'SELECT cart.amount, goods.* FROM cart \
+        INNER JOIN goods ON goods.id = cart.goodid    \
+        WHERE cart.userid = ? AND cart.ticketid IS NULL AND goods.isOnsale=1',
+        (g.user['id'],)
+    ).fetchall()
+    deletedgoods=db.execute(
+        'SELECT cart.amount, goods.* FROM cart \
+        INNER JOIN goods ON goods.id = cart.goodid    \
+        WHERE cart.userid = ? AND cart.ticketid IS NULL AND goods.isOnsale=0',
+        (g.user['id'],)
+    ).fetchall()
+    for deletedgood in deletedgoods:
+        db.execute(
+            'DELETE FROM cart WHERE userid = ? AND ticketid IS NULL AND goodid = ?',
+            (g.user['id'],deletedgood['id'],)
+        )
+    if existedgoods == []:
+        flash("购物车只包含已下架商品",category="error")
+        return redirect(request.referrer)
     amount=db.execute(
-        'SELECT SUM(amount*value) AS VALUE FROM (SELECT cart.amount, goods.* FROM cart INNER JOIN goods ON goods.id = cart.goodid WHERE cart.userid = ? AND cart.ticketid IS NULL)',
+        'SELECT SUM(amount*value) AS VALUE \
+        FROM (SELECT cart.amount, goods.* FROM cart INNER JOIN goods ON goods.id = cart.goodid \
+        WHERE cart.userid = ? AND cart.ticketid IS NULL AND goods.isOnsale=1)',
         (g.user['id'],)
     ).fetchone()['value']
     info=db.execute(
