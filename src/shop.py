@@ -20,13 +20,9 @@ def find(pattern, path):
                 result.append(os.path.join(root, name))
     return result
 
-def shop_required(view):
+def shop_user_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        g.shopuser = get_db().execute(
-            'SELECT * FROM shopuser WHERE userid = ?',
-            (g.user['id'],)
-        ).fetchone()
         if g.shopuser is None:
             flash("你尚未完善商店个人信息",category="error")
             return redirect(url_for('shop.adduserinfo'))
@@ -37,6 +33,9 @@ def shop_required(view):
 def shop_admin_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
+        if g.shopuser is None:
+            flash("你尚未完善商店个人信息",category="error")
+            return redirect(url_for('shop.adduserinfo'))
         if g.shopuser['isadmin'] == False:
             flash("你不是管理员",category="error")
             return redirect(url_for('index'))
@@ -82,8 +81,6 @@ def adduserinfo():
     return redirect(url_for('shop.index'))
 
 @bp.route('/addgood',methods=['POST','GET'])
-@login_required
-@shop_required
 @shop_admin_required
 def addgood():
     if request.method=='GET':
@@ -106,8 +103,6 @@ def addgood():
     return redirect(url_for('shop.addpic',id=info.lastrowid))
 
 @bp.route('/addpic',methods=['POST','GET'])
-@login_required
-@shop_required
 @shop_admin_required
 def addpic():
     if request.method=='GET':
@@ -140,8 +135,6 @@ def detail(idnum):
 
 
 @bp.route('/amendgood/<int:idnum>',methods=['POST','GET'])
-@login_required
-@shop_required
 @shop_admin_required
 def amendgood(idnum):
     if request.method=='GET':
@@ -170,8 +163,6 @@ def amendgood(idnum):
     return redirect(url_for('shop.addpic',id=idnum))
 
 @bp.route('/deletegood/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
 @shop_admin_required
 def deletegood(idnum):
     db=get_db()
@@ -183,8 +174,7 @@ def deletegood(idnum):
     return redirect(request.referrer)
 
 @bp.route('/changeuserinfo',methods=['GET','POST'])
-@login_required
-@shop_required
+@shop_user_required
 def changeuserinfo():
     if request.method == 'GET':
         return render_template('shop/userinfo.html',i=g.shopuser)
@@ -223,8 +213,7 @@ def search():
     return render_template('shop/index.html', goods=goods,categories=categories,search=True,search_name=search_name)
 
 @bp.route('/buy/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
+@shop_user_required
 def buy(idnum):
     db=get_db()
     info=db.execute(
@@ -246,8 +235,7 @@ def buy(idnum):
     return redirect(request.referrer)
 
 @bp.route('/minusone/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
+@shop_user_required
 def minusone(idnum):
     db=get_db()
     info=db.execute(
@@ -273,8 +261,7 @@ def minusone(idnum):
     return redirect(request.referrer)
 
 @bp.route('/delete/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
+@shop_user_required
 def delete(idnum):
     db=get_db()
     info=db.execute(
@@ -293,8 +280,7 @@ def delete(idnum):
     return redirect(request.referrer)
 
 @bp.route('/cart')
-@login_required
-@shop_required
+@shop_user_required
 def cart():
     db=get_db()
     goods=db.execute(
@@ -310,8 +296,7 @@ def cart():
     return render_template('shop/cart.html',goods=goods,amount=amount)
 
 @bp.route('/emptycart',methods=['POST'])
-@login_required
-@shop_required
+@shop_user_required
 def emptycart():
     db=get_db()
     db.execute(
@@ -323,8 +308,7 @@ def emptycart():
 
 
 @bp.route('/calccart',methods=['POST'])
-@login_required
-@shop_required
+@shop_user_required
 def calccart():
     db=get_db()
     goods=db.execute(
@@ -352,8 +336,7 @@ def calccart():
     return redirect(request.referrer)
 
 @bp.route('/tickets')
-@login_required
-@shop_required
+@shop_user_required
 def tickets():
     db=get_db()
     tickets=db.execute(
@@ -370,8 +353,7 @@ def tickets():
     return render_template('shop/tickets.html',info=info)
 
 @bp.route('/cancelticket/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
+@shop_user_required
 def cancelticket(idnum):
     db=get_db()
     info=db.execute(
@@ -389,8 +371,6 @@ def cancelticket(idnum):
     return redirect(request.referrer)
 
 @bp.route('/finishticket/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
 @shop_admin_required
 def finishticket(idnum):
     db=get_db()
@@ -409,8 +389,6 @@ def finishticket(idnum):
     return redirect(request.referrer)
 
 @bp.route('/configtickets')
-@login_required
-@shop_required
 @shop_admin_required
 def configtickets():
     db=get_db()
@@ -429,8 +407,6 @@ def configtickets():
 
 
 @bp.route('/createcategory',methods=['GET','POST'])
-@login_required
-@shop_required
 @shop_admin_required
 def createcategory():
     if request.method=='GET':
@@ -453,8 +429,6 @@ def createcategory():
     return redirect(url_for("shop.index"))
 
 @bp.route('/categories')
-@login_required
-@shop_required
 @shop_admin_required
 def categories():
     db=get_db()
@@ -464,8 +438,6 @@ def categories():
     return render_template("shop/categories.html",info=info)
 
 @bp.route('/renamecategory/<int:idnum>',methods=['GET','POST'])
-@login_required
-@shop_required
 @shop_admin_required
 def renamecategory(idnum):
     if request.method=='GET':
@@ -488,8 +460,6 @@ def renamecategory(idnum):
     return redirect(url_for("shop.categories"))
 
 @bp.route('/deletecategory/<int:idnum>',methods=['POST'])
-@login_required
-@shop_required
 @shop_admin_required
 def deletecategory(idnum):
     db=get_db()
