@@ -118,6 +118,12 @@ def addpic():
     if 'file' not in request.files:
         flash('No file part',category="error")
         return redirect(request.referrer)
+    try:
+        file_path=os.path.abspath(find(str(request.form['id'])+'.*',basedir)[0])
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    except IndexError:
+        pass
     files = request.files.getlist("file")
     for file in files:
         split_file_name = os.path.splitext(file.filename)
