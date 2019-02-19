@@ -415,7 +415,7 @@ def finishticket(idnum):
         'SELECT status FROM ticket WHERE id = ?',
         (idnum,)
     ).fetchone()
-    if info['status'] != "pending":
+    if info is None or info['status'] != "pending":
         flash("非法完成订单",category="error")
         return redirect(request.referrer)
     db.execute(
