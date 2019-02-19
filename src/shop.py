@@ -142,7 +142,7 @@ def detail(idnum):
         (idnum,)
     ).fetchone()
     if good is None:
-        flash("不存在该商品")
+        flash("不存在该商品",category="error")
         return redirect(url_for("shop.index"))
     html=markdown2.markdown(good['description'])
     return render_template('shop/detail.html',good=good,html=html)
@@ -157,7 +157,7 @@ def amendgood(idnum):
         (idnum,)
     ).fetchone()
     if good is None:
-        flash("不存在该商品")
+        flash("不存在该商品",category="error")
         return redirect(url_for("shop.index"))
     if request.method=='GET':
         categories=db.execute(
@@ -185,13 +185,14 @@ def deletegood(idnum):
         (idnum,)
     ).fetchone()
     if good is None:
-        flash("不存在该商品")
+        flash("不存在该商品",category="error")
         return redirect(url_for("shop.index"))
     db.execute(
         'UPDATE goods SET isOnSale=0 WHERE id = ?',
         (idnum,)
     )
     db.commit()
+    flash("商品成功删除")
     return redirect(request.referrer)
 
 @bp.route('/changeuserinfo',methods=['GET','POST'])
