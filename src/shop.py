@@ -212,12 +212,14 @@ def changeuserinfo():
     db.commit()
     return redirect(url_for('shop.index'))
 
-@bp.route('/search',methods=['GET'])
+@bp.route('/search')
 def search():
     search_name=request.values.get('search_name')
     category=request.values.get('category')
     db=get_db()
     goods=None
+    if search_name is None:
+        search_name=''
     if category is not None:
         goods=db.execute(
             'SELECT id, name, value, type, amount FROM goods where isOnsale=1 AND name LIKE ? AND type = ?',
