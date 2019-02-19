@@ -302,15 +302,15 @@ def minusone(idnum):
 def delete(idnum):
     db=get_db()
     info=db.execute(
-        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
-        (idnum,)
+        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+        (idnum,g.user['id'],)
     ).fetchone()
     if info is None:
         flash("非法删除操作",category="error")
         return redirect(request.referrer)
     db.execute(
-        'DELETE FROM cart WHERE goodid = ? AND ticketid IS NULL',
-        (idnum,)
+        'DELETE FROM cart WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+        (idnum,g.user['id'],)
     )
     db.commit()
     flash("商品已从购物车移除")
