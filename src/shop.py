@@ -180,6 +180,13 @@ def amendgood(idnum):
 @shop_admin_required
 def deletegood(idnum):
     db=get_db()
+    good=db.execute(
+        'SELECT * FROM goods WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    if good is None:
+        flash("不存在该商品")
+        return redirect(url_for("shop.index"))
     db.execute(
         'UPDATE goods SET isOnSale=0 WHERE id = ?',
         (idnum,)
