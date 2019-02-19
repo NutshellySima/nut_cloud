@@ -448,6 +448,19 @@ def cancelticket(idnum):
         'UPDATE ticket SET status = ? WHERE id = ? AND userid = ?',
         ("cancelled",idnum,g.user['id'],)
     )
+    goods=db.execute(
+        'SELECT * FROM cart WHERE ticketid = ? AND userid = ?',
+        (idnum,g.user['id'],)
+    ).fetchall()
+    for good in goods:
+        oldamount=db.execute(
+            'SELECT * FROM goods WHERE id = ?',
+            (good['goodid'],)
+        ).fetchone()['amount']
+        db.execute(
+            'UPDATE goods SET amount = ? WHERE id = ?',
+            (oldamount+good['amount'],good['goodid'],)
+        )
     db.commit()
     return redirect(request.referrer)
 
