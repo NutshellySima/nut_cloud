@@ -50,11 +50,11 @@ def index():
     goods=None
     if category is None:
         goods=db.execute(
-            'SELECT id, name, value FROM goods where isOnsale=1'
+            'SELECT id, name, value, type, amount FROM goods where isOnsale=1'
         ).fetchall()
     else:
         goods=db.execute(
-            'SELECT id, name, value FROM goods where isOnsale=1 AND type = ?',
+            'SELECT id, name, value, type, amount FROM goods where isOnsale=1 AND type = ?',
             (category,)
         ).fetchall()
     categories=db.execute(
@@ -200,12 +200,12 @@ def search():
     goods=None
     if category is not None:
         goods=db.execute(
-            'SELECT id, name, value FROM goods where isOnsale=1 AND name LIKE ? AND type = ?',
+            'SELECT id, name, value, type, amount FROM goods where isOnsale=1 AND name LIKE ? AND type = ?',
             ("%"+search_name+"%",category,)
         ).fetchall()
     else:
         goods=db.execute(
-            'SELECT id, name, value FROM goods where isOnsale=1 AND name LIKE ?',
+            'SELECT id, name, value, type, amount FROM goods where isOnsale=1 AND name LIKE ?',
             ("%"+search_name+"%",)
         ).fetchall()
     categories=db.execute(
