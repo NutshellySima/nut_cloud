@@ -239,6 +239,13 @@ def search():
 @shop_user_required
 def buy(idnum):
     db=get_db()
+    good=db.execute(
+        'SELECT * FROM goods WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    if good is None:
+        flash("不存在该商品",category="error")
+        return redirect(url_for("shop.index"))
     info=db.execute(
         'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
         (idnum,)
