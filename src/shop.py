@@ -394,6 +394,7 @@ def calccart():
         (info.lastrowid, g.user['id'],)
     )
     db.commit()
+    flash("已成功结算购物车")
     return redirect(request.referrer)
 
 @bp.route('/tickets')
