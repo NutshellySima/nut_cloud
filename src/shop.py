@@ -145,13 +145,15 @@ def detail(idnum):
 @bp.route('/amendgood/<int:idnum>',methods=['POST','GET'])
 @shop_admin_required
 def amendgood(idnum):
+    db=get_db()
+    good=db.execute(
+        'SELECT * FROM goods WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    if good is None:
+        flash("不存在该商品")
+        redirect(url_for("shop.index"))
     if request.method=='GET':
-        db=get_db()
-        good=db.execute(
-            'SELECT * FROM goods WHERE id = ?',
-            (idnum,)
-        ).fetchone()
-        db=get_db()
         categories=db.execute(
             'SELECT name FROM category'
         ).fetchall()
@@ -160,12 +162,10 @@ def amendgood(idnum):
     value=request.form.get("value")
     amount=request.form.get("amount")
     gtype=request.form.get("type")
-    isOnsale=1 if request.form.get("isOnsale")=='on' else 0
     description=request.form.get("description")
-    db=get_db()
     db.execute(
-        'UPDATE goods SET name = ?, value = ?, amount = ?, type = ?, isOnsale = ?, description = ? WHERE id = ?',
-        (name, value, amount, gtype, isOnsale, description,idnum,)
+        'UPDATE goods SET name = ?, value = ?, amount = ?, type = ?, description = ? WHERE id = ?',
+        (name, value, amount, gtype, description,idnum,)
     )
     db.commit()
     return redirect(url_for('shop.addpic',id=idnum))
