@@ -66,14 +66,21 @@ def index():
 @bp.route('/adduserinfo',methods=['POST','GET'])
 @login_required
 def adduserinfo():
+    db=get_db()
+    info=db.execute(
+        'SELECT * FROM shopuser WHERE userid = ?',
+        (g.user['id'],)
+    ).fetchone()
+    if info is not None:
+        flash("你已注册过")
+        return redirect(url_for("shop.index"))
     if request.method == 'GET':
         return render_template('shop/userinfo.html')
     isadmin=g.user['isadmin']
-    address=request.form['address']
-    postalcode=request.form['postalcode']
-    phone=request.form['phone']
-    email=request.form['email']
-    db=get_db()
+    address=request.form.get('address')
+    postalcode=request.form.get('postalcode')
+    phone=request.form.get('phone')
+    email=request.form.get('email')
     db.execute(
         'INSERT INTO shopuser (userid, phone, email, address, postalcode, isadmin) VALUES (?, ?, ?, ?, ?, ?)',
         (g.user['id'],phone,email,address,postalcode,isadmin,)
