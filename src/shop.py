@@ -327,7 +327,9 @@ def cart():
         (g.user['id'],)
     ).fetchall()
     amount=db.execute(
-        'SELECT SUM(amount*value) AS VALUE FROM (SELECT cart.amount, goods.* FROM cart INNER JOIN goods ON goods.id = cart.goodid WHERE cart.userid = ? AND cart.ticketid IS NULL)',
+        'SELECT SUM(amount*value) AS VALUE FROM (SELECT cart.amount, goods.* \
+        FROM cart INNER JOIN goods ON goods.id = cart.goodid \
+        WHERE cart.userid = ? AND cart.ticketid IS NULL AND goods.isOnsale=1)',
         (g.user['id'],)
     ).fetchone()['value']
     return render_template('shop/cart.html',goods=goods,amount=amount)
