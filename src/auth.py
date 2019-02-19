@@ -144,8 +144,8 @@ def settings():
 @bp.route('/registerAdmin', methods=['POST'])
 @login_required
 def registerAdmin():
-    isAdmin=g.user['isadmin']
-    if not isAdmin:
+    isAdmin=int(g.user['isadmin'])
+    if isAdmin == 0:
         return redirect(url_for('auth.settings'))
     else:
         db=get_db()
@@ -169,8 +169,8 @@ def registerAdmin():
 @bp.route('/registerPan', methods=['POST'])
 @login_required
 def registerPan():
-    isAdmin=g.user['isadmin']
-    if not isAdmin:
+    isAdmin=int(g.user['isadmin'])
+    if isAdmin == 0:
         return redirect(url_for('auth.settings'))
     else:
         db=get_db()
