@@ -32,5 +32,6 @@ setuptools.setup(
         'qrcode',
         'click',
         'markdown2',
+        'Pillow',
     ],
 )
