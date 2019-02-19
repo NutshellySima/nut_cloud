@@ -30,7 +30,11 @@ Amend good
         <div class="col">
             <select class="form-control" name='type' id="type">
                 {% for category in categories %}
+                {% if category['name'] == good['type'] %}
+                <option selected>{{category['name']}}</option>
+                {% else %}
                 <option>{{category['name']}}</option>
+                {% endif %}
                 {% endfor %}
             </select>
         </div>
