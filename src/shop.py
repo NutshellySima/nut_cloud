@@ -20,20 +20,6 @@ def find(pattern, path):
                 result.append(os.path.join(root, name))
     return result
 
-def pre_shop(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user:
-            g.shopuser = get_db().execute(
-                'SELECT * FROM shopuser WHERE userid = ?',
-                (g.user['id'],)
-            ).fetchone()
-        else:
-            g.shopuser=None
-        return view(**kwargs)
-
-    return wrapped_view
-
 def shop_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -59,7 +45,6 @@ def shop_admin_required(view):
     return wrapped_view
 
 @bp.route('/')
-@pre_shop
 def index():
     db=get_db()
     category=request.values.get('category')
@@ -139,13 +124,11 @@ def addpic():
     return redirect(url_for('shop.index'))
 
 @bp.route('/getpic/<int:idnum>')
-@pre_shop
 def getpic(idnum):
     path=os.path.abspath(find(str(idnum)+'.*',basedir)[0])
     return send_file(path, conditional=True)
 
 @bp.route('/detail/<int:idnum>')
-@pre_shop
 def detail(idnum):
     db=get_db()
     good=db.execute(
@@ -219,7 +202,6 @@ def changeuserinfo():
     return redirect(url_for('shop.index'))
 
 @bp.route('/search',methods=['GET'])
-@pre_shop
 def search():
     search_name=request.values.get('search_name')
     category=request.values.get('category')

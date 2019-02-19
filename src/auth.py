@@ -96,10 +96,16 @@ def load_logged_in_user():
 
     if user_id is None:
         g.user=None
+        g.shopuser=None
     else:
-        g.user=get_db().execute(
+        db=get_db()
+        g.user=db.execute(
             'SELECT * FROM user WHERE id = ?',
             (user_id,)
+        ).fetchone()
+        g.shopuser = db.execute(
+            'SELECT * FROM shopuser WHERE userid = ?',
+            (g.user['id'],)
         ).fetchone()
 
 def login_required(view):
