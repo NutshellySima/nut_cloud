@@ -397,7 +397,7 @@ def cancelticket(idnum):
         'SELECT status FROM ticket WHERE id = ? AND userid = ?',
         (idnum,g.user['id'],)
     ).fetchone()
-    if info['status'] != "pending":
+    if info is None or info['status'] != "pending":
         flash("非法取消订单",category="error")
         return redirect(request.referrer)
     db.execute(
