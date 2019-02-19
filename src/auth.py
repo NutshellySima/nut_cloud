@@ -97,6 +97,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user=None
         g.shopuser=None
+        g.panuser=None
     else:
         db=get_db()
         g.user=db.execute(
@@ -105,6 +106,10 @@ def load_logged_in_user():
         ).fetchone()
         g.shopuser = db.execute(
             'SELECT * FROM shopuser WHERE userid = ?',
+            (g.user['id'],)
+        ).fetchone()
+        g.panuser=db.execute(
+            'SELECT * FROM panuser WHERE userid = ?',
             (g.user['id'],)
         ).fetchone()
 

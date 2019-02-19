@@ -5,9 +5,7 @@
 {% endblock %}
 
 {% block nav_left %}
-<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.index') }}">我的文件</a></li>
-<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.shares') }}">我的分享</a></li>
-<li class="nav-item"> <a class="nav-link text-light" href="{{ url_for('pan.list_file', dir_path='anyone') }}">共享文件夹</a></li>
+{% include 'pan/navleft.html' %}
 {% endblock %}
 
 {% block nav_right %}

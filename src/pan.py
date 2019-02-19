@@ -45,10 +45,6 @@ file_remover = FileRemover()
 def pan_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        g.panuser = get_db().execute(
-            'SELECT * FROM panuser WHERE userid = ?',
-            (g.user['id'],)
-        ).fetchone()
         if g.panuser is None:
             flash("你没有网盘访问权限",category="error")
             return redirect(url_for('index'))
