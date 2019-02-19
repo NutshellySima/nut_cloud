@@ -19,13 +19,13 @@ Amend good
                 value="{{good['name']}}">
         </div>
         <div class="col">
-            <input type="number" class="form-control" placeholder="商品价格" required name='value'
+            <input type="number" min="0" class="form-control" placeholder="商品价格" required name='value'
                 value="{{good['value']}}">
         </div>
     </div>
     <div class="form-row">
         <div class="col">
-            <input type="number" class="form-control" placeholder="商品总数（可选）" name='amount' value="{{good['amount']}}">
+            <input type="number" min="0" class="form-control" placeholder="商品总数（可选）" name='amount' value="{{good['amount']}}">
         </div>
         <div class="col">
             <select class="form-control" name='type' id="type">
