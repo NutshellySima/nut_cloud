@@ -240,15 +240,15 @@ def search():
 def buy(idnum):
     db=get_db()
     good=db.execute(
-        'SELECT * FROM goods WHERE id = ?',
+        'SELECT * FROM goods WHERE id = ? AND isOnsale = 1',
         (idnum,)
     ).fetchone()
     if good is None:
         flash("不存在该商品",category="error")
         return redirect(url_for("shop.index"))
     info=db.execute(
-        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
-        (idnum,)
+        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+        (idnum,g.user['id'],)
     ).fetchone()
     if info is None:
         db.execute(
@@ -257,8 +257,8 @@ def buy(idnum):
         )
     else:
         db.execute(
-            'UPDATE cart SET amount = ? WHERE goodid = ? AND ticketid IS NULL',
-            (info['amount']+1,idnum,)
+            'UPDATE cart SET amount = ? WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+            (info['amount']+1,idnum,g.user['id'],)
         )
     db.commit()
     flash("商品已成功加入购物车")
@@ -268,9 +268,16 @@ def buy(idnum):
 @shop_user_required
 def minusone(idnum):
     db=get_db()
-    info=db.execute(
-        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL',
+    good=db.execute(
+        'SELECT * FROM goods WHERE id = ? AND isOnsale = 1',
         (idnum,)
+    ).fetchone()
+    if good is None:
+        flash("不存在该商品",category="error")
+        return redirect(url_for("shop.index"))
+    info=db.execute(
+        'SELECT amount FROM cart WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+        (idnum,g.user['id'],)
     ).fetchone()
     if info is None:
         flash("非法-1操作",category="error")
@@ -278,13 +285,13 @@ def minusone(idnum):
     amount=info['amount']-1
     if amount == 0:
         db.execute(
-            'DELETE FROM cart WHERE goodid = ? AND ticketid IS NULL',
-            (idnum,)
+            'DELETE FROM cart WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+            (idnum,g.user['id'],)
         )
     else:
         db.execute(
-            'UPDATE cart SET amount = ? WHERE goodid = ? AND ticketid IS NULL',
-            (amount,idnum,)
+            'UPDATE cart SET amount = ? WHERE goodid = ? AND ticketid IS NULL AND userid = ?',
+            (amount,idnum,g.user['id'],)
         )
     db.commit()
     flash("商品已成功-1")
