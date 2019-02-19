@@ -9,8 +9,8 @@ import datetime
 import tarfile
 import tempfile
 from tempfile import NamedTemporaryFile
-from src.auth import login_required
-from src.db import get_db
+from nut_cloud.auth import login_required
+from nut_cloud.db import get_db
 import os
 import shutil
 import weakref

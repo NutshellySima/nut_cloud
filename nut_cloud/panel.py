@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from src.auth import login_required
-from src.db import get_db
+from nut_cloud.auth import login_required
+from nut_cloud.db import get_db
 
 bp=Blueprint('panel', __name__)
 

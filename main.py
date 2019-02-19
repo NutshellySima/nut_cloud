@@ -1,4 +1,4 @@
-import src
+import nut_cloud
 
-app=src.create_app()
+app=nut_cloud.create_app()
 application=app

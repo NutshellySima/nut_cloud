@@ -2,8 +2,8 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file
 )
 from werkzeug.exceptions import abort
-from src.auth import login_required
-from src.db import get_db
+from nut_cloud.auth import login_required
+from nut_cloud.db import get_db
 import functools
 import os
 import os, fnmatch

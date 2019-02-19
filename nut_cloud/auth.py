@@ -6,7 +6,7 @@ from flask import (
 from zxcvbn import zxcvbn
 import nacl.pwhash
 
-from src.db import get_db
+from nut_cloud.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
