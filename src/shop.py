@@ -375,6 +375,15 @@ def calccart():
             pass
     if isValid==False:
         return redirect(request.referrer)
+    for good in existedgoods:
+        try:
+            if good['amount'] is not None and good['amount']!='':
+                db.execute(
+                    'UPDATE goods SET amount = ? WHERE id = ?',
+                    (int(good['amount'])-int(good['cartamount']),good['id'],)
+                )
+        except KeyError:
+            pass
     deletedgoods=db.execute(
         'SELECT cart.amount, goods.* FROM cart \
         INNER JOIN goods ON goods.id = cart.goodid    \
