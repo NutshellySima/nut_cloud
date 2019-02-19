@@ -507,6 +507,13 @@ def renamecategory(idnum):
 @shop_admin_required
 def deletecategory(idnum):
     db=get_db()
+    info=db.execute(
+        'SELECT * FROM category WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    if info is None:
+        flash("不存在该类别")
+        return redirect(request.referrer)
     oldname=db.execute(
         'SELECT name FROM category WHERE id = ?',
         (idnum,)
