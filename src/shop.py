@@ -360,11 +360,21 @@ def calccart():
         flash("你的购物车是空的",category="error")
         return redirect(request.referrer)
     existedgoods=db.execute(
-        'SELECT cart.amount, goods.* FROM cart \
+        'SELECT cart.amount AS cartamount, goods.* FROM cart \
         INNER JOIN goods ON goods.id = cart.goodid    \
         WHERE cart.userid = ? AND cart.ticketid IS NULL AND goods.isOnsale=1',
         (g.user['id'],)
     ).fetchall()
+    isValid=True
+    for good in existedgoods:
+        try:
+            if good['amount'] is not None and good['amount']!='' and int(good['cartamount'])>int(good['amount']):
+                isValid=False
+                flash("商品"+str(good['id'])+" - "+good['name']+"库存仅剩"+str(good['amount'])+"件",category="error")
+        except KeyError:
+            pass
+    if isValid==False:
+        return redirect(request.referrer)
     deletedgoods=db.execute(
         'SELECT cart.amount, goods.* FROM cart \
         INNER JOIN goods ON goods.id = cart.goodid    \
