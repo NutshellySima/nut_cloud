@@ -477,10 +477,17 @@ def categories():
 @bp.route('/renamecategory/<int:idnum>',methods=['GET','POST'])
 @shop_admin_required
 def renamecategory(idnum):
+    db=get_db()
+    info=db.execute(
+        'SELECT * FROM category WHERE id = ?',
+        (idnum,)
+    ).fetchone()
+    if info is None:
+        flash("不存在该类别")
+        return redirect(request.referrer)
     if request.method=='GET':
         return render_template("shop/createcategory.html")
-    name=request.form['name']
-    db=get_db()
+    name=request.form.get('name')
     oldname=db.execute(
         'SELECT name FROM category WHERE id = ?',
         (idnum,)
