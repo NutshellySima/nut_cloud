@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file,current_app
 )
 from werkzeug.exceptions import abort
 from nut_cloud.auth import login_required
@@ -10,7 +10,7 @@ import os, fnmatch
 import markdown2
 
 bp = Blueprint('shop', __name__, url_prefix='/shop')
-basedir="../upload_files/anyone/shop"
+basedir=os.path.join(current_app.config['PANFILE'],"anyone/shop")
 
 def find(pattern, path):
     result = []

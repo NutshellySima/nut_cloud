@@ -9,6 +9,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='ec82-502e-caf0-8bb9-1be9',
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'),
+        PANFILE=os.path.join(app.instance_path, 'upload_files/'),
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE='Strict',
     )
@@ -32,14 +33,14 @@ def create_app(test_config=None):
     from . import pan
     app.register_blueprint(pan.bp)
     try:
-        os.makedirs("../upload_files/")
+        os.makedirs(app.config['PANFILE'])
     except OSError:
         pass
     
     from . import shop
     app.register_blueprint(shop.bp)
     try:
-        os.makedirs("../upload_files/anyone/shop")
+        os.makedirs(os.path.join(app.config['PANFILE'],"anyone/shop/"))
     except OSError:
         pass
 

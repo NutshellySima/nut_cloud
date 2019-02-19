@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file,current_app
 )
 from werkzeug.exceptions import abort
 import qrcode
@@ -49,11 +49,11 @@ def pan_required(view):
             flash("你没有网盘访问权限",category="error")
             return redirect(url_for('index'))
         try:
-            os.makedirs(os.path.join("../upload_files/", g.user['username']))
+            os.makedirs(os.path.join(current_app.config['PANFILE'], g.user['username']))
         except OSError:
             pass
         try:
-            os.makedirs(os.path.join("../upload_files/anyone/"))
+            os.makedirs(os.path.join(current_app.config['PANFILE'],"anyone/"))
         except OSError:
             pass
         return view(**kwargs)
@@ -61,11 +61,11 @@ def pan_required(view):
     return wrapped_view
 
 def makeUserDirAbsPath(user):
-    return os.path.abspath(os.path.join('../upload_files/', user))
+    return os.path.abspath(os.path.join(current_app.config['PANFILE'], user))
 def requestedAbsPath(path):
     if path is None:
         path=''
-    return os.path.abspath(os.path.join('../upload_files/', path))
+    return os.path.abspath(os.path.join(current_app.config['PANFILE'], path))
 def DirAisinDirB(DirA, DirB):
     return os.path.commonpath([os.path.abspath(DirA), os.path.abspath(DirB)]) == DirB
 def isAnyoneRequest(requestedPath):
@@ -307,7 +307,7 @@ def shares():
     ).fetchall()
     shareLinks=[]
     for i in info:
-        rel_path=os.path.relpath(i['filename'],'../upload_files/')
+        rel_path=os.path.relpath(i['filename'],current_app.config['PANFILE'])
         Pass=i['password'] is not None
         shareLinks.append((i['link'],rel_path,str(i['expiretime']), Pass))
     return render_template('pan/shares.html',links=shareLinks)
