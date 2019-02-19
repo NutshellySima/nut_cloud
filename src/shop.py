@@ -62,8 +62,9 @@ def index():
     ).fetchall()
     return render_template('shop/index.html', goods=goods,categories=categories,search=False)
 
-@login_required
+
 @bp.route('/adduserinfo',methods=['POST','GET'])
+@login_required
 def adduserinfo():
     if request.method == 'GET':
         return render_template('shop/userinfo.html')
