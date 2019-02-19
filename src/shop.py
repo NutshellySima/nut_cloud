@@ -456,11 +456,15 @@ def cancelticket(idnum):
         oldamount=db.execute(
             'SELECT * FROM goods WHERE id = ?',
             (good['goodid'],)
-        ).fetchone()['amount']
-        db.execute(
-            'UPDATE goods SET amount = ? WHERE id = ?',
-            (oldamount+good['amount'],good['goodid'],)
-        )
+        ).fetchone()
+        try:
+            if oldamount['amount'] is not None and oldamount['amount']!='':
+                db.execute(
+                    'UPDATE goods SET amount = ? WHERE id = ?',
+                    (int(oldamount['amount'])+int(good['amount']),good['goodid'],)
+                )
+        except KeyError:
+            pass
     db.commit()
     return redirect(request.referrer)
 
