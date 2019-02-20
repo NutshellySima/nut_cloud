@@ -118,7 +118,7 @@ def addpic():
         flash('No file part',category="error")
         return redirect(request.referrer)
     try:
-        file_path=os.path.abspath(find(str(request.form['id'])+'.*',os.path.join(current_app.config['PANFILE'],"anyone/shop"))[0])
+        file_path=os.path.abspath(find(str(request.form['id'])+'.*',current_app.config['SHOPFILE'])[0])
         if os.path.isfile(file_path):
             os.remove(file_path)
     except IndexError:
@@ -127,14 +127,14 @@ def addpic():
     for file in files:
         split_file_name = os.path.splitext(file.filename)
         path = str(request.form['id']) + split_file_name[1]
-        path=os.path.join(os.path.join(current_app.config['PANFILE'],"anyone/shop"), path)
+        path=os.path.join(current_app.config['SHOPFILE'], path)
         file.save(path)
     return redirect(url_for('shop.index'))
 
 @bp.route('/getpic/<int:idnum>')
 def getpic(idnum):
     try:
-        path=os.path.abspath(find(str(idnum)+'.*',os.path.join(current_app.config['PANFILE'],"anyone/shop"))[0])
+        path=os.path.abspath(find(str(idnum)+'.*',current_app.config['SHOPFILE'])[0])
         return send_file(path, conditional=True)
     except IndexError:
         return 'Error',404
