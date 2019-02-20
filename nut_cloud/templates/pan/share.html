@@ -12,7 +12,7 @@
 {%if share_link%}
 <div class="text-center">
     <p class="lead">分享的链接为</p>
-    <p class="lead">https://www.lambdaof.xyz/pan/s?link={{share_link}}</p>
+    <p class="lead">{{hostname}}/pan/s?link={{share_link}}</p>
     <img width="100%" height="auto" src="{{ url_for('pan.genqrcode') }}?link={{share_link}}" />
     <form class="form-signin" action="{{ url_for('pan.list_file') }}" method="GET">
         <button class="btn btn-lg btn-primary btn-block" type="submit">返回我的文件</button>

@@ -291,7 +291,7 @@ def genqrcode():
     qr=qrcode.QRCode(
         error_correction=qrcode.constants.ERROR_CORRECT_H,
     )
-    qr.add_data('https://www.lambdaof.xyz/pan/s?link='+request.values['link'])
+    qr.add_data(current_app.config['HOSTNAME']+'/pan/s?link='+request.values['link'])
     qr.make(fit=True)
     img=qr.make_image()
     return serve_pil_image(img)
@@ -351,7 +351,7 @@ def share():
             (password, shareLink,)
         )
     db.commit()
-    return render_template('pan/share.html',share_link=shareLink),201
+    return render_template('pan/share.html',share_link=shareLink,hostname=current_app.config['HOSTNAME']),201
 
 
 @bp.route('/delete_link', methods=['POST'])

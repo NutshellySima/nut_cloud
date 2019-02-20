@@ -10,6 +10,7 @@ def create_app(test_config=None):
         SECRET_KEY='ec82-502e-caf0-8bb9-1be9',
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'),
         PANFILE=os.path.join(app.instance_path, 'upload_files/'),
+        HOSTNAME='https://www.lambdaof.xyz',
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE='Strict',
     )
