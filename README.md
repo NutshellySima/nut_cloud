@@ -25,7 +25,9 @@ Flask
 
 ## CAUTION
 
-You need to configure the `app_secret_key` and the `host` yourself!
+You need to configure the `SECRET_KEY` and the `HOSTNAME` yourself!
+
+You can put a `config.py` in the app instance folder to configure these settings.
 
 ## Language
 
