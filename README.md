@@ -1,5 +1,7 @@
 # nut_cloud
 
+[![PyPI version](https://badge.fury.io/py/nut-cloud.svg)](https://badge.fury.io/py/nut-cloud)
+
 A website featuring a easy cloud drive and an online shop.
 
 ## Feature
