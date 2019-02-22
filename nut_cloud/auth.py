@@ -5,6 +5,8 @@ from flask import (
 )
 from zxcvbn import zxcvbn
 import nacl.pwhash
+from werkzeug.utils import secure_filename
+from werkzeug.exceptions import abort
 
 from nut_cloud.db import get_db
 
@@ -13,7 +15,9 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username=request.form['username']
+        username=secure_filename(request.form['username'])
+        if username.strip() == "":
+            abort(400)
         password=request.form['password']
         db=get_db()
         error=None
@@ -54,7 +58,9 @@ def register():
 @bp.route('login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username=request.form['username']
+        username=secure_filename(request.form['username'])
+        if username.strip() == "":
+            abort(400)
         password=request.form['password']
         db=get_db()
         error=None
@@ -156,7 +162,7 @@ def registerAdmin():
         db=get_db()
         user=db.execute(
             'SELECT id FROM user WHERE username = ?',
-            (request.form['username'],)
+            (secure_filename(request.form['username']),)
         ).fetchone()
         if user is None:
             return redirect(url_for('auth.settings'))
@@ -181,7 +187,7 @@ def registerPan():
         db=get_db()
         user=db.execute(
             'SELECT * FROM user WHERE username = ?',
-            (request.form['username'],)
+            (secure_filename(request.form['username']),)
         ).fetchone()
         if user is None:
             return redirect(url_for('auth.settings'))

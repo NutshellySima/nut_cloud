@@ -2,6 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, send_file,current_app
 )
 from werkzeug.exceptions import abort
+from werkzeug.utils import secure_filename
 import qrcode
 import base64
 import nacl.pwhash
@@ -49,7 +50,7 @@ def pan_required(view):
             flash("你没有网盘访问权限",category="error")
             return redirect(url_for('index'))
         try:
-            os.makedirs(os.path.join(current_app.config['PANFILE'], g.user['username']))
+            os.makedirs(os.path.join(current_app.config['PANFILE'], secure_filename(g.user['username'])))
         except OSError:
             pass
         try:
@@ -70,7 +71,7 @@ def requestedAbsPath(path):
         abort(403)
     return ret_path
 def makeUserDirAbsPath(user):
-    user_path=os.path.abspath(os.path.join(current_app.config['PANFILE'], user))
+    user_path=os.path.abspath(os.path.join(current_app.config['PANFILE'], secure_filename(user)))
     if not DirAisinDirB(user_path,requestedAbsPath(None)):
         abort(403)
     return user_path
