@@ -66,7 +66,7 @@ def requestedAbsPath(path):
     if path is None:
         path=''
     ret_path=os.path.abspath(os.path.join(current_app.config['PANFILE'], path))
-    if not DirAisinDirB(ret_path,requestedAbsPath(None)):
+    if not DirAisinDirB(ret_path,os.path.abspath(current_app.config['PANFILE'])):
         abort(403)
     return ret_path
 def makeUserDirAbsPath(user):
