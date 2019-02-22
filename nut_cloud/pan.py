@@ -60,12 +60,15 @@ def pan_required(view):
 
     return wrapped_view
 
+def DirAisinDirB(DirA, DirB):
+    return os.path.commonpath([os.path.abspath(DirA), os.path.abspath(DirB)]) == DirB
 def requestedAbsPath(path):
     if path is None:
         path=''
-    return os.path.abspath(os.path.join(current_app.config['PANFILE'], path))
-def DirAisinDirB(DirA, DirB):
-    return os.path.commonpath([os.path.abspath(DirA), os.path.abspath(DirB)]) == DirB
+    ret_path=os.path.abspath(os.path.join(current_app.config['PANFILE'], path))
+    if not DirAisinDirB(ret_path,requestedAbsPath(None)):
+        abort(403)
+    return ret_path
 def makeUserDirAbsPath(user):
     user_path=os.path.abspath(os.path.join(current_app.config['PANFILE'], user))
     if not DirAisinDirB(user_path,requestedAbsPath(None)):
@@ -78,6 +81,8 @@ def isNotRoot(requestedPath, realUser):
 def isValidRequest(requestedPath, realUser):
     return DirAisinDirB(requestedPath, makeUserDirAbsPath(realUser)) or DirAisinDirB(requestedPath, makeUserDirAbsPath("anyone"))
 def whichUserRequest(requestedPath, realUser):
+    if not isValidRequest(requestedPath, realUser):
+        abort(403)
     if isAnyoneRequest(requestedPath):
         return "anyone"
     return realUser
