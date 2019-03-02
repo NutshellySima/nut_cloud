@@ -28,7 +28,7 @@ You can put a `config.py` in the app instance folder to configure these settings
 
 You can configure your `WEBHOOK_SECRET_KEY` to match the secret key of Github Webhooks, 
 then you can use Systemd to monitor file changes under `{instance path}/restart/` and 
-restart the `uwsgi` server each time the file is changed.
+restart the `uwsgi` server each time any file is changed.
 
 ## Language
 
