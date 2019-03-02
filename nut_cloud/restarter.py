@@ -9,4 +9,4 @@ def restarter(restarterabspath):
     subprocess.run(["git","pull"])
     restarter_file=os.path.join(restarterabspath,'log.txt')
     with open(restarter_file, "a+") as myfile:
-        myfile.write(str(datetime.datetime.now()))
+        myfile.write(str(datetime.datetime.now())+"\n")
