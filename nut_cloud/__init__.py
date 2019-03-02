@@ -8,7 +8,7 @@ def create_app(test_config=None):
     app=Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        WEBHOOK_SECRET_KEY='dev',
+        WEBHOOK_SECRET_KEY=b'dev',
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'),
         PANFILE=os.path.join(app.instance_path, 'upload_files/'),
         SHOPFILE=os.path.join(app.instance_path, 'shop/'),
