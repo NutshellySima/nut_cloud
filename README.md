@@ -43,6 +43,6 @@ Simplified Chinese
 
 ## License
 
-Copyright (c) 2018-2019 Chijun Sima
+Copyright (c) 2018-2019 Chijun Sima, Yixue Zhong
 
 Licensed under the MIT License.
