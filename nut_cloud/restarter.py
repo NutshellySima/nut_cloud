@@ -3,7 +3,7 @@ import subprocess
 import datetime
 
 
-def restarter(restarterabspath):
+def restarter(restarterabspath, key):
     Filepath=os.path.abspath(__file__)
     os.chdir(os.path.abspath(os.path.join(Filepath,'../')))
     subprocess.run(["git","pull"])

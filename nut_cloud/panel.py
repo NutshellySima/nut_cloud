@@ -20,12 +20,8 @@ def restart():
     try:
         if request.headers['X-GitHub-Event'] == 'ping':
             return ('', 204)
-        # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
-        # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
         if request.headers['X-GitHub-Event'] == 'push':
-            restarter(os.path.abspath(current_app.config['RESTARTFILE']))
-            #os.spawnl(os.P_NOWAIT, '/home/sima/myproject/start.sh',
-                      #'/home/sima/myproject/start.sh')
+            restarter(os.path.abspath(current_app.config['RESTARTFILE']),current_app.config['WEBHOOK_SECRET_KEY'])
             return ('', 204)
     except Exception as e:
         print(e)
