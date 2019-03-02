@@ -15,7 +15,7 @@ bp=Blueprint('panel', __name__)
 def index():
     return render_template('panel/index.html')
 
-@bp.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
+@bp.route('/restart', methods=['POST'])
 def restart():
     if not verifyrestart(request.get_data(),current_app.config['WEBHOOK_SECRET_KEY'],request.headers['X-Hub-Signature']):
         abort(403)
