@@ -7,6 +7,7 @@ from zxcvbn import zxcvbn
 import nacl.pwhash
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import abort
+import re
 
 from nut_cloud.db import get_db
 
@@ -15,6 +16,11 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        username=request.form['username']
+        if re.fullmatch('[0-9A-Za-z]+', username) is None:
+            flash('The username must match [0-9A-Za-z]+',category='error')
+            return render_template('auth/register.html')
+        
         username=secure_filename(request.form['username'])
         if username.strip() == "":
             abort(400)
@@ -58,6 +64,11 @@ def register():
 @bp.route('login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        username=request.form['username']
+        if re.fullmatch('[0-9A-Za-z]+', username) is None:
+            flash('The username must match [0-9A-Za-z]+',category='error')
+            return render_template('auth/login.html')
+        
         username=secure_filename(request.form['username'])
         if username.strip() == "":
             abort(400)
