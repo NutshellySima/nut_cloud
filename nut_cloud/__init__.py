@@ -11,6 +11,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'data.sqlite'),
         PANFILE=os.path.join(app.instance_path, 'upload_files/'),
         SHOPFILE=os.path.join(app.instance_path, 'shop/'),
+        RESTARTFILE=os.path.join(app.instance_path, 'restart/'),
         HOSTNAME='https://www.example.com',
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE='Strict',
@@ -48,6 +49,10 @@ def create_app(test_config=None):
 
     from . import panel
     app.register_blueprint(panel.bp)
+    try:
+        os.makedirs(app.config['RESTARTFILE'])
+    except OSError:
+        pass
 
     app.add_url_rule('/', endpoint='index')
 
