@@ -270,22 +270,6 @@ def delete_file():
     db.commit()
     return redirect(url_for('pan.list_file',dir_path=dir_path))
 
-@bp.route('/restart-b9b3-a760-f2ba-8784', methods=['POST'])
-def restart():
-    try:
-        if request.headers['X-GitHub-Event'] == 'ping':
-            return ('', 204)
-        # FIXME: We should also prevent replay attack in header: X-GitHub-Delivery
-        # FIXME: We should also prevent malicious attacks in header: X-Hub-Signature
-        if request.headers['X-GitHub-Event'] == 'push':
-            os.spawnl(os.P_NOWAIT, '/home/sima/myproject/start.sh',
-                      '/home/sima/myproject/start.sh')
-            return ('', 204)
-    except Exception as e:
-        print(e)
-        return ('', 500)
-
-
 # Qrcode
 def serve_pil_image(pil_img):
     img_io=NamedTemporaryFile(mode='w+b', suffix='jpg')
