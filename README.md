@@ -2,20 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/nut-cloud.svg)](https://badge.fury.io/py/nut-cloud)
 
-A website featuring a easy cloud drive and an online shop.
-
-## Feature
-
-1. Shop
-2. Cloud drive
-
-### Database
-
-SQLite
-
-### Framework
-
-Flask
+an online shop and a cloud drive using SQLite, Flask as the backend and the Bootstrap framework to ameliorate the appearance of the frontend.
 
 ## Usage
 
@@ -33,9 +20,15 @@ Flask
 
 ## CAUTION
 
-You need to configure the `SECRET_KEY` and the `HOSTNAME` yourself!
+You need to configure the `SECRET_KEY`, `WEBHOOK_SECRET_KEY` and the `HOSTNAME` yourself!
 
 You can put a `config.py` in the app instance folder to configure these settings.
+
+## Auto deploy
+
+You can configure your `WEBHOOK_SECRET_KEY` to match the secret key of Github Webhooks, 
+then you can use Systemd to monitor file changes under `{instance path}/restart/` and 
+restart the `uwsgi` server each time the file is changed.
 
 ## Language
 

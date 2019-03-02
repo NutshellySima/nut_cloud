@@ -8,7 +8,7 @@ setuptools.setup(
     version='19.03.02',
     author="Chijun Sima, Yixue Zhong",
     author_email="simachijun@gmail.com",
-    description="A website featuring a easy cloud drive and an online shop.",
+    description="A website featuring a cloud drive and an online shop.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/NutshellySima/nut_cloud",
