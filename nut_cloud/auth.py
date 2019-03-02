@@ -1,7 +1,7 @@
 import functools
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
 from zxcvbn import zxcvbn
 import nacl.pwhash
@@ -94,6 +94,8 @@ def login():
         
         flash(error,category="error")
     
+    if current_app.config['SECRET_KEY']=='dev':
+        flash("You need to change your SECRET_KEY!",category='error')
     return render_template('auth/login.html')
 
 @bp.before_app_request
