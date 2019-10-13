@@ -110,7 +110,7 @@ def list_file():
         name=file_name=str(file)
         split_file_name = os.path.splitext(fileAbsPath)
         is_dir=os.path.isdir(fileAbsPath)
-        if not is_dir:
+        if not is_dir and split_file_name[1][1:]:
             name=file_name[:-len(split_file_name[1])]
         ext=str(split_file_name[1][1:])
         return {
@@ -210,7 +210,7 @@ def search():
         file_size=str(size(os.path.getsize(fileAbsPath)))
         split_file_name = os.path.splitext(fileAbsPath)
         is_dir=os.path.isdir(fileAbsPath)
-        if not is_dir:
+        if not is_dir and split_file_name[1][1:]:
             name=file_name[:-len(split_file_name[1])]
         ext=str(split_file_name[1][1:])
         return {
