@@ -1,8 +1,5 @@
 var cacheName = 'PWA-v1';
 var contentToCache = [
-  '/',
-  '/auth/register',
-  '/auth/login',
   '/static/drag_and_drop.js',
   '/static/favicon.ico',
   '/static/main.js',
