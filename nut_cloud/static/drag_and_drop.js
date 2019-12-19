@@ -40,7 +40,7 @@ function dropHandler(ev) {
         }
     }
 
-    xhr.open('POST', '/upload_file');
+    xhr.open('POST', '/pan/upload_file');
 
     xhr.onload = function () {
         // Request finished. Do processing here.
