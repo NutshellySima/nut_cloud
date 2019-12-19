@@ -15,6 +15,10 @@ bp=Blueprint('panel', __name__)
 def index():
     return render_template('panel/index.html')
 
+@bp.route('/sw.js')
+def sw():
+    return current_app.send_static_file('sw.js')
+
 @bp.route('/restart', methods=['POST'])
 def restart():
     if not verifyrestart(request.get_data(),current_app.config['WEBHOOK_SECRET_KEY'],request.headers['X-Hub-Signature']):

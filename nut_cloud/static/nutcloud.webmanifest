@@ -1,0 +1,22 @@
+{
+    "name": "NutCloud",
+    "short_name": "NutCloud",
+    "description": "Progressive Web App that provides a cloud drive and an e-shop.",
+    "icons": [
+        {
+            "src": "/static/favicon-192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/static/favicon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#007bff",
+    "scope": "/",
+    "background_color": "#007bff"
+}
