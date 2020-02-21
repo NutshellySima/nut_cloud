@@ -129,3 +129,104 @@ body {
   .smrmbutton{
     -webkit-appearance: none;
   }
+
+/* redefine colors for dark mode */
+
+@media (prefers-color-scheme: dark) {
+
+body {
+  background-color: #1E1F21;
+}
+
+.footer {
+  background-color: #474749;
+}
+
+#drop_zone {
+  border: 2px dashed white;
+}
+
+.editor-toolbar,.CodeMirror,.editor-statusbar{
+  background-color: #474749;
+}
+
+.card {
+  background-color: #1E1F21;
+  border: 1.5px solid white;
+}
+
+h5.card-title {
+  color: white;
+}
+
+p.card-text {
+  color: white;
+}
+
+h1.text-center.h3.mb-3.font-weight-normal {
+  color: white;
+}
+
+.form-control {
+  background-color: #343a40;
+}
+
+p {
+  color: white;
+}
+
+.text-secondary {
+  color: wheat!important;
+}
+
+.card-header:first-child {
+  color: white;
+}
+
+.text-dark {
+  color: white!important;
+}
+
+.card-header {
+  border-bottom: 1px solid white;
+}
+
+.border-dark {
+  border-color: #f8f9fa!important;
+}
+
+.font-weight-normal {
+  color: white;
+}
+
+.table td, .table th {
+  color: white;
+}
+
+hr {
+  border-top: 1px solid white;
+}
+
+.card-footer {
+  border-top: 1px solid white;
+}
+
+.bg-light {
+  background-color: black!important;
+}
+
+.form-signin .form-control {
+  color: wheat;
+}
+
+.h2, h2 {
+  color: white;
+}
+
+.list-group-item {
+  background-color: black;
+  border: 1px solid white;
+  color: white;
+}
+
+}
