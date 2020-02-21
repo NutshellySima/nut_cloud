@@ -1,4 +1,4 @@
-var cacheName = 'PWA-v1';
+var cacheName = 'PWA-v2';
 var contentToCache = [
   '/static/drag_and_drop.js',
   '/static/favicon.ico',
