@@ -229,4 +229,29 @@ hr {
   color: white;
 }
 
+.modal-content {
+  background-color: rgb(75, 74, 74);
+}
+
+.modal-header {
+  border-bottom: 1px solid slategray;
+}
+
+.modal-footer {
+  border-top: 1px solid slategray;
+}
+
+.modal-title {
+  color: white;
+}
+
+.modal-body {
+  color: white;
+}
+
+.close {
+  color: white;
+  text-shadow: 0 1px 0 white;
+}
+
 }
