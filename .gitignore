@@ -105,4 +105,4 @@ venv.bak/
 
 *.sqlite
 
-*.txt
+# *.txt

@@ -1,0 +1,8 @@
+flask
+zxcvbn
+PyNaCl
+hurry.filesize
+qrcode
+click
+markdown2
+Pillow

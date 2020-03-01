@@ -6,7 +6,14 @@ an online shop and a cloud drive using SQLite, Flask as the backend and the Boot
 
 ## Usage
 
-### The first time
+### Docker local
+
+1. `docker build -t nut_cloud .`
+2. `docker run -it --rm --name my-running-app --mount source=nut_cloud_volume,target=/usr/src/app/instance -p 80:5000 nut_cloud`
+
+### Python environment
+
+#### The first time
 
 1. `pip install nut-cloud`
 2. + For Linux/macos/BSDs: `$ export FLASK_APP="nut_cloud"`
@@ -14,7 +21,7 @@ an online shop and a cloud drive using SQLite, Flask as the backend and the Boot
 3. `$ flask init-db` (Only needed on the first time running nut_cloud)
 4. `$ flask run`
 
-### Later
+#### Later
 
 `$ python -c 'import nut_cloud; nut_cloud.create_app().run()'`
 
