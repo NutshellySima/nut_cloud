@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='nut_cloud',
-    version='19.03.02',
+    version='20.03.01',
     author="Chijun Sima, Yixue Zhong",
     author_email="simachijun@gmail.com",
     description="A website featuring a cloud drive and an online shop.",
