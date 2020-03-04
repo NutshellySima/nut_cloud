@@ -323,8 +323,11 @@ def share():
     if error is not None:
         flash(error,category="error")
         return redirect(request.referrer)
-    shareLink=generateRandomCode()
+    shareLink=generateRandomCode()[:6]
     db=get_db()
+    info=[i['link'] for i in db.execute('SELECT link FROM share_info').fetchall()]
+    while shareLink in info:
+        shareLink=generateRandomCode()[:6]
     db.execute(
         'INSERT INTO share_info (link, filename, userid) VALUES (?, ?, ?)',
         (shareLink,file_path,g.user['id'],)
