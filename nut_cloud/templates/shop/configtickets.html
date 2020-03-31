@@ -10,12 +10,7 @@ Config tickets
 
 {% block content %}
 
-<style>
-    .card-custom {
-        max-width: 300px;
-        min-width: 300px;
-    }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename= 'shop2.css') }}">
 
 <div class="row smrow mt-5 justify-content-center">
     {% for i in info %}
