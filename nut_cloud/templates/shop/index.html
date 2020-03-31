@@ -39,12 +39,7 @@ Shop
     </ul>
 </nav>
 
-<style>
-    .card-custom {
-        max-width: 256px;
-        min-width: 256px;
-    }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename= 'shop.css') }}">
 
 <div class="row smrow mt-5 justify-content-center">
     {% for i in goods %}
