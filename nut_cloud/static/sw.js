@@ -1,13 +1,13 @@
-var cacheName = 'PWA-v3';
+var cacheName = 'PWA-v4';
 var contentToCache = [
   '/static/drag_and_drop.js',
   '/static/favicon.ico',
   '/static/main.js',
   '/static/style.css',
-  'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',
-  'https://code.jquery.com/jquery-3.4.1.slim.min.js',
-  'https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js',
-  'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js',
+  'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css',
+  'https://code.jquery.com/jquery-3.5.1.slim.min.js',
+  'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js',
+  'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js',
   '/static/nutcloud.webmanifest'
 ];
 
